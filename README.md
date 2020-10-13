@@ -3,13 +3,12 @@
 ## Requirements
 - Python3
 - Module Django
-- Module clickhouse-sqlalchemy
 
 ## Installing
 
-> Operating system: Ubuntu, Window
+> Operating system: Ubuntu
 
-### Clone
+### Clone the remote repository to local
 
 ```bash
 git clone https://github.com/vodinhhung/Hotel_metasearch_backend
@@ -19,7 +18,7 @@ git clone https://github.com/vodinhhung/Hotel_metasearch_backend
 
 ```bash
 pip3 install Django
-pip3 install clickhouse-sqlalchemy
+sudo apt-get install python3-psycopg2
 ```
 
 ### Database setup
