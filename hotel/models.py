@@ -1,12 +1,10 @@
 from django.db import models
-from postgres_copy import CopyManager
 
 
 class Province(models.Model):
     id = models.IntegerField()
     province_id = models.IntegerField(primary_key=True)
     province_name = models.CharField(max_length=20)
-    objects = CopyManager()
 
 
 class District(models.Model):
@@ -14,7 +12,6 @@ class District(models.Model):
     district_id = models.IntegerField(primary_key=True)
     province_id = models.ForeignKey(Province,on_delete=models.SET_NULL,null=True)
     district_name = models.CharField(max_length=50)
-    objects = CopyManager()
 
 
 class Street(models.Model):
@@ -23,14 +20,12 @@ class Street(models.Model):
     province_id = models.ForeignKey(Province,on_delete=models.SET_NULL,null=True)
     district_id = models.ForeignKey(District,on_delete=models.SET_NULL,null=True)
     street_name = models.CharField(max_length=100)
-    objects = CopyManager()
 
 
 class Domain(models.Model):
     id = models.IntegerField()
     domain_id = models.IntegerField(primary_key=True)
     domain_name = models.CharField(max_length=20)
-    objects = CopyManager()
 
 
 class RootHotel(models.Model):
@@ -48,7 +43,6 @@ class RootHotel(models.Model):
     check_in = models.CharField(max_length=20, null=True)
     check_out = models.CharField(max_length=20, null=True)
     description = models.CharField(max_length=10000, null=True)
-    objects = CopyManager()
 
 
 class HotelInfo(models.Model):
@@ -66,7 +60,6 @@ class HotelInfo(models.Model):
     have_tour = models.IntegerField()
     have_spa = models.IntegerField()
     have_pool = models.IntegerField()
-    objects = CopyManager()
 
 
 class HotelQuality(models.Model):
@@ -80,7 +73,7 @@ class HotelQuality(models.Model):
     service_score = models.FloatField(max_length=5)
     facility_score = models.FloatField(max_length=5)
     overall_score = models.FloatField(max_length=5)
-    objects = CopyManager()
+
 
 
 class HotelUrl(models.Model):
@@ -89,6 +82,5 @@ class HotelUrl(models.Model):
     domain_hotel_id = models.CharField(max_length=100)
     domain_id = models.ForeignKey(Domain, on_delete=models.CASCADE)
     url = models.CharField(max_length=2083)
-    objects = CopyManager()
 
 
