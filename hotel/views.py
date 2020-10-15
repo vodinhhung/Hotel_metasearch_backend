@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
-
 from django.http import HttpResponse
 import json
 from sqlalchemy import create_engine
@@ -37,3 +36,4 @@ def hotel_detail(request, id):
     c = json.dumps(b)
 
     return HttpResponse(c, content_type="application/json")
+
