@@ -6,7 +6,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
 conn = psycopg2.connect(database="root",
                         user="postgres",
-                        password="Nguyentuandung2901",
+                        password="s",
                         host="localhost",
                         port="5432")
 
