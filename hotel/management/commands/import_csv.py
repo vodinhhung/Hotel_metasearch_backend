@@ -1,31 +1,32 @@
 import psycopg2
 import sys, os
+import pandas as pd
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
-conn = psycopg2.connect(database="root2",
+conn = psycopg2.connect(database="root",
                         user="postgres",
                         password="Nguyentuandung2901",
                         host="localhost",
                         port="5432")
 
 cur = conn.cursor()
-drop_root= "DELETE FROM hotel_roothotel"
-drop_quality= "DELETE FROM hotel_hotelquality"
-drop_info= "DELETE FROM hotel_hotelinfo"
+drop_root= "DELETE FROM hotel_root"
+drop_quality= "DELETE FROM hotel_quality"
+drop_info= "DELETE FROM hotel_info"
 drop_province= "DELETE FROM hotel_province"
 drop_district= "DELETE FROM hotel_district"
 drop_street= "DELETE FROM hotel_street"
-drop_url= "DELETE FROM hotel_hotelurl"
+drop_url= "DELETE FROM hotel_url"
 drop_domain = "DELETE FROM hotel_domain"
 province = "COPY hotel_province FROM "+"'"+BASE_DIR+"/data/province.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 district = "COPY hotel_district FROM "+"'"+BASE_DIR+"/data/district.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 street = "COPY hotel_street FROM "+"'"+BASE_DIR+"/data/street.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 domain = "COPY hotel_domain FROM "+"'"+BASE_DIR+"/data/domain.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-root_hotel = "COPY hotel_roothotel FROM "+"'"+BASE_DIR+"/data/root.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-hotel_quality = "COPY hotel_hotelquality FROM "+"'"+BASE_DIR+"/data/quality.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-hotel_info = "COPY hotel_hotelinfo FROM "+"'"+BASE_DIR+"/data/info.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-hotel_url = "COPY hotel_hotelurl FROM "+"'"+BASE_DIR+"/data/url.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+root_hotel = "COPY hotel_root FROM "+"'"+BASE_DIR+"/data/root.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+hotel_quality = "COPY hotel_quality FROM "+"'"+BASE_DIR+"/data/quality.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+hotel_info = "COPY hotel_info FROM "+"'"+BASE_DIR+"/data/info.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+hotel_url = "COPY hotel_url FROM "+"'"+BASE_DIR+"/data/url.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 
 cur.execute(drop_quality)
 conn.commit()
