@@ -17,10 +17,14 @@ git clone https://github.com/vodinhhung/Hotel_metasearch_backend
 ```
 
 ### Config Database
-- Open pg Admin4, enter your password
-- Create Database in Object tab
+- Open pg Admin4 or SQL Shell, enter your password
+- If you use **pdAdmin4** Create Database in Object tab
 ![pd Admin 4 image](https://sp.postgresqltutorial.com/wp-content/uploads/2019/05/pgAdmin-connected-to-PostgreSQL-Database-Server.png)
-- Open ./hotel_metasearch/settings.py
+- If you use **SQL Shell**, type in command
+```bash
+CREATE DATABASE yourdatabase;
+```
+- Open *./hotel_metasearch/settings.py*
 - Change setting configs 
 ![database config](https://miro.medium.com/max/1596/1*pSmANFeDf2Zhj-WDSpGiVw.png)
 ### Install module
@@ -38,10 +42,12 @@ python3 manage.py migrate
 ```
 
 ### Import Data
+- Go to *commnands* folder
 ```bash
 cd hotel\management\commands
 ```
-- Change Database connection to your database
+- Change Database connection to your database in **import_csv.py**
+- Import database
 ```bash
 python3 import_csv.py
 ```
