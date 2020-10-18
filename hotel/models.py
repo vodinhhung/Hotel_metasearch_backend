@@ -2,52 +2,52 @@ from django.db import models
 
 
 class Province(models.Model):
-    id = models.IntegerField()
-    province_id = models.IntegerField(primary_key=True)
-    province_name = models.CharField(max_length=20)
+    index = models.IntegerField()
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=20)
 
 
 class District(models.Model):
-    id = models.IntegerField()
-    district_id = models.IntegerField(primary_key=True)
-    province_id = models.ForeignKey(Province,on_delete=models.SET_NULL,null=True)
-    district_name = models.CharField(max_length=50)
+    index = models.IntegerField()
+    id = models.IntegerField(primary_key=True)
+    province = models.ForeignKey(Province,on_delete=models.SET_NULL,null=True)
+    name = models.CharField(max_length=50)
 
 
 class Street(models.Model):
-    id = models.IntegerField()
-    street_id = models.BigIntegerField(primary_key=True)
-    province_id = models.ForeignKey(Province,on_delete=models.SET_NULL,null=True)
-    district_id = models.ForeignKey(District,on_delete=models.SET_NULL,null=True)
-    street_name = models.CharField(max_length=100)
+    index = models.IntegerField()
+    id = models.BigIntegerField(primary_key=True)
+    province = models.ForeignKey(Province,on_delete=models.SET_NULL,null=True)
+    district = models.ForeignKey(District,on_delete=models.SET_NULL,null=True)
+    name = models.CharField(max_length=100)
 
 
 class Domain(models.Model):
-    id = models.IntegerField()
-    domain_id = models.IntegerField(primary_key=True)
-    domain_name = models.CharField(max_length=20)
+    index = models.IntegerField()
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=20)
 
 
-class RootHotel(models.Model):
-    id = models.IntegerField()
-    hotel_id = models.IntegerField(primary_key=True)
-    hotel_name = models.CharField(max_length=500)
-    hotel_address = models.CharField(max_length=500, null=True)
-    hotel_logo = models.CharField(max_length=2083, null=True)
-    province_id = models.ForeignKey(Province,  on_delete=models.CASCADE, null=True)
-    district_id = models.ForeignKey(District, on_delete=models.CASCADE, null=True)
-    street_id = models.CharField(max_length=500, null=True)
-    hotel_lat = models.FloatField(max_length=20, null=True)
-    hotel_long = models.FloatField(max_length=20, null=True)
-    hotel_star = models.IntegerField(null=True)
+class Root(models.Model):
+    index = models.IntegerField()
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=500)
+    address = models.CharField(max_length=500, null=True)
+    logo = models.CharField(max_length=2083, null=True)
+    province = models.ForeignKey(Province,  on_delete=models.CASCADE, null=True)
+    district = models.ForeignKey(District, on_delete=models.CASCADE, null=True)
+    lat = models.FloatField(max_length=20, null=True)
+    long = models.FloatField(max_length=20, null=True)
+    star = models.IntegerField(null=True)
     check_in = models.CharField(max_length=20, null=True)
     check_out = models.CharField(max_length=20, null=True)
-    description = models.CharField(max_length=10000, null=True)
+    description = models.TextField(null=True)
+    street = models.CharField(max_length=500, null=True)
 
 
-class HotelInfo(models.Model):
+class Info(models.Model):
     index = models.IntegerField()
-    hotel_id = models.ForeignKey(RootHotel, primary_key=True, on_delete=models.CASCADE)
+    root = models.ForeignKey(Root, primary_key=True, on_delete=models.CASCADE)
     have_breakfast = models.IntegerField()
     is_free_wifi = models.IntegerField()
     have_car_park = models.IntegerField()
@@ -62,9 +62,9 @@ class HotelInfo(models.Model):
     have_pool = models.IntegerField()
 
 
-class HotelQuality(models.Model):
+class Quality(models.Model):
     index = models.IntegerField()
-    hotel_id = models.ForeignKey(RootHotel, primary_key=True, on_delete=models.CASCADE)
+    root = models.ForeignKey(Root, primary_key=True, on_delete=models.CASCADE)
     cleanliness_scores = models.FloatField(max_length=5)
     meal_score = models.FloatField(max_length=5)
     location_score = models.FloatField(max_length=5)
@@ -75,12 +75,11 @@ class HotelQuality(models.Model):
     overall_score = models.FloatField(max_length=5)
 
 
-
-class HotelUrl(models.Model):
+class Url(models.Model):
     index = models.IntegerField(primary_key=True)
-    hotel_id = models.ForeignKey(RootHotel, on_delete=models.CASCADE)
+    root = models.ForeignKey(Root, on_delete=models.CASCADE)
     domain_hotel_id = models.CharField(max_length=100)
-    domain_id = models.ForeignKey(Domain, on_delete=models.CASCADE)
+    domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
     url = models.CharField(max_length=2083)
 
 
