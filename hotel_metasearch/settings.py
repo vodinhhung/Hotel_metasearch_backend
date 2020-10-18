@@ -78,11 +78,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'root2',
+        'NAME': 'hotel_metasearch',
 
         'USER': 'postgres',
 
-        'PASSWORD': 'Nguyentuandung2901',
+        'PASSWORD': '123',
 
         'HOST': 'localhost',
 
