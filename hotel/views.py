@@ -8,21 +8,9 @@ from rest_framework.utils import serializer_helpers
 from hotel.serializers import DomainSerializer, RootSerializer
 from hotel.models import Root, Domain
 
-def hotel_list(request, page_number = 1, page_size = 10):
-    hotel_list = Root.objects.all()
-    paginator = Paginator(hotel_list, page_size)
-    hotels = paginator.page(page_number)
-
-    print(hotel_list)
-    print(hotels)
-
-    # return JsonResponse(list(hotels), safe=False)
-    return JsonResponse([], safe=False)
-
 def hotel_detail(request, id):
     if request.method == "GET":
         hotel = Root.objects.get(index=id)
-        print(hotel)
         serializer = RootSerializer(hotel, many=False)
         return JsonResponse(serializer.data, safe=False)
 
