@@ -7,10 +7,12 @@ from rest_framework.utils import serializer_helpers
 
 from hotel.serializers import DomainSerializer, RootSerializer
 from hotel.models import Root, Domain
+from hotel.templates import render_hotel_detail_template
 
 def hotel_detail(request, id):
     if request.method == "GET":
         hotel = Root.objects.get(index=id)
+        render_hotel_detail_template(hotel)
         serializer = RootSerializer(hotel, many=False)
         return JsonResponse(serializer.data, safe=False)
 
