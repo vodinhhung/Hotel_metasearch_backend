@@ -4,9 +4,9 @@ import pandas as pd
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
-conn = psycopg2.connect(database="root",
+conn = psycopg2.connect(database="hotel_metasearch",
                         user="postgres",
-                        password="s",
+                        password="123",
                         host="localhost",
                         port="5432")
 
