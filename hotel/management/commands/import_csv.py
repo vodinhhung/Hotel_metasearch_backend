@@ -26,7 +26,7 @@ domain = "COPY hotel_domain FROM "+"'"+BASE_DIR+"/data/domain.csv"+"'"+" DELIMIT
 root_hotel = "COPY hotel_root FROM "+"'"+BASE_DIR+"/data/root.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 hotel_quality = "COPY hotel_quality FROM "+"'"+BASE_DIR+"/data/quality.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 hotel_info = "COPY hotel_info FROM "+"'"+BASE_DIR+"/data/info.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-hotel_url = "COPY hotel_url FROM "+"'"+BASE_DIR+"/data/url.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+hotel_url = "COPY hotel_url FROM "+"'"+BASE_DIR+"/data/url_new.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 
 cur.execute(drop_quality)
 conn.commit()
