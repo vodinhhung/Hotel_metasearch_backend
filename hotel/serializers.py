@@ -13,6 +13,7 @@ class HotelSerializer(serializers.ModelSerializer):
 
 class RootSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
+    index = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=500)
     address = serializers.CharField(max_length=500, allow_blank=False)
     logo = serializers.CharField(max_length=2083)

@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 import json
 
-from hotel.models import Province, Root, Url, Quality, Domain
+from hotel.models import Province, Root, Url, Quality, Info
 from hotel.serializers import RootSerializer
 from hotel.templates import render_hotel_detail_template
 
@@ -62,10 +62,19 @@ def hotel_list(request):
                 if float(price) < min_price :
                     min_price = price
                     d_id = domain_id 
-            a = {'id': root[i].id,'name': root[i].name,'address': root[i].address,
-                                  'star': root[i].star, 'logo': root[i].logo,
-                                  'overall_score': quality[0].overall_score, 
-                                  'price': {'domain': d_id, 'value': min_price}}
+            a = {
+                'id': root[i].id,
+                'name': root[i].name,
+                'address': root[i].address,
+                'star': root[i].star, 
+                'logo': root[i].logo,
+                'overall_score': quality[0].overall_score, 
+                'price': {'domain': d_id, 'value': min_price},
+                'review': {
+                    "score": 7,
+                    "number_of_review": 2529465,
+                }
+            },
             b.append(a)
         hotel_list_dict = { "items": b,
                             "total_item": len(root) }
@@ -74,10 +83,15 @@ def hotel_list(request):
 
 def hotel_detail(request, id):
     if request.method == "GET":
+        # Get hotel information from databse
         hotel = Root.objects.get(index=id)
-        render_hotel_detail_template(hotel)
-        serializer = RootSerializer(hotel, many=False)
-        return JsonResponse(serializer.data, safe=False)
+        info = Info.objects.get(index=id)
+        urls = Url.objects.filter(root_id=id)
+
+        # Customise Json response
+        hotel_detail = render_hotel_detail_template(hotel, info, urls)
+        hotel_detail_json = json.dumps(hotel_detail)
+        return HttpResponse(hotel_detail_json, content_type="application/json")
 
 def province_list(request):
     if request.method == 'GET':

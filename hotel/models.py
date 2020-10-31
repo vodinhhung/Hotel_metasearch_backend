@@ -74,7 +74,7 @@ class Info(models.Model):
     have_pool = models.IntegerField()
     
     def __str__(self):
-        return self.name
+        return self.root.name
 
 class Quality(models.Model):
     index = models.IntegerField()
@@ -88,10 +88,6 @@ class Quality(models.Model):
     facility_score = models.FloatField(max_length=5)
     overall_score = models.FloatField(max_length=5)
 
-    def __str__(self):
-        return self.name
-
-
 class Url(models.Model):
     index = models.IntegerField(primary_key=True)
     root = models.ForeignKey(Root, on_delete=models.CASCADE)
@@ -100,4 +96,4 @@ class Url(models.Model):
     url = models.CharField(max_length=2083)
 
     def __str__(self):
-        return self.name
+        return self.url
