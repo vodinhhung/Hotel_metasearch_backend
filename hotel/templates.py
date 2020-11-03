@@ -1,7 +1,7 @@
 from datetime import date
 
 from hotel.models import Domain, Url, Quality, Root
-from hotel.tools import get_price, get_min_price_domain
+from hotel.tools import get_price, get_min_price_domain, get_min_price_hotel
 
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
@@ -191,7 +191,7 @@ def render_hotel_list_template(root, total):
     for i in range(len(root)):
         urls = Url.objects.filter(root_id = root[i].id)
         quality = Quality.objects.filter(root_id = root[i].id)
-        [min_price, domain_id] = get_min_price_domain(urls)
+        [min_price, domain_id] = get_min_price_hotel(urls)
         if (domain_id != -1): 
             if domain_id == '2' :
                 domain = 'Traveloka'
