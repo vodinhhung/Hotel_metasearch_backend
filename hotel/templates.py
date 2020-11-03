@@ -8,7 +8,7 @@ date = str(today.year)+str(today.month)+str(today.day)
 
 def render_hotel_detail_template(hotel, services, urls, quality):
     hotel_detail_dic = {
-        'id': hotel.index,
+        'id': hotel.id,
         'name': hotel.name,
         'assets': [hotel.logo],
         'address': hotel.address,
