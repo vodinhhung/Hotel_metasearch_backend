@@ -30,8 +30,8 @@ def hotel_list(request):
 def hotel_detail(request, id):
     if request.method == "GET":
         # Get hotel information from databse
-        hotel = Root.objects.get(index=id)
-        info = Info.objects.get(index=id)
+        hotel = Root.objects.get(id=id)
+        info = Info.objects.get(root_id=id)
         urls = Url.objects.filter(root_id=id)
         quality = Quality.objects.get(root_id=id)
 
