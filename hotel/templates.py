@@ -192,7 +192,8 @@ def render_hotel_list_template(root, total):
         urls = Url.objects.filter(root_id = root[i].id)
         quality = Quality.objects.filter(root_id = root[i].id)
         [min_price, domain_id] = get_min_price_hotel(urls)
-        if (domain_id != -1): 
+
+        if (domain_id != -1):
             if domain_id == '2' :
                 domain = 'Traveloka'
             elif domain_id == '3' :
@@ -201,11 +202,22 @@ def render_hotel_list_template(root, total):
                 domain = 'Booking'
             else:
                 domain = 'None'
-            item = {'id': root[i].index,'name': root[i].name,'address': root[i].address,
-                                'star': root[i].star, 'logo': root[i].logo,
-                                'overall_score': quality[0].overall_score, 
-                                'price': {'domain': domain, 'value': min_price}}
+
+            item = {
+                'id': root[i].id,
+                'name': root[i].name,
+                'address': root[i].address,
+                'star': root[i].star, 
+                'logo': root[i].logo,
+                'overall_score': quality[0].overall_score, 
+                'price': {
+                    'domain': domain, 
+                    'value': min_price
+                }
+            }
+
             items.append(item)
+            
     hotel_list_dict = { "items": items,
                         "total_item": total }
     return hotel_list_dict

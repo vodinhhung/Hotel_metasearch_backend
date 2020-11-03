@@ -25,6 +25,7 @@ def hotel_list(request):
         root = Root.objects.filter(province_id = province_id)[num_p:(num_p+5)]
         hotel_list_dict = render_hotel_list_template(root, total)
         hotel_list_json = json.dumps(hotel_list_dict)
+        
         return HttpResponse(hotel_list_json, content_type="application/json")
 
 def hotel_detail(request, id):
