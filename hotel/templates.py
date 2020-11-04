@@ -188,7 +188,7 @@ def render_facilities_hotel_detail(quality):
 
 def render_hotel_list_template(root, total):
     items = []
-    for i in range(len(root)):
+    for i in range(0,root.count()):
         urls = Url.objects.filter(root_id = root[i].id)
         quality = Quality.objects.filter(root_id = root[i].id)
         [min_price, domain_id] = get_min_price_hotel(urls)
