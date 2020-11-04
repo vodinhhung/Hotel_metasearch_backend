@@ -1,7 +1,7 @@
 from datetime import date
 
 from hotel.models import Domain, Url, Quality, Root
-from hotel.tools import get_price, get_min_price_domain, get_min_price_hotel
+from hotel.tools import get_all_price_domain_hotel, get_min_price_hotel
 
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
@@ -128,20 +128,27 @@ def render_service_hotel_detail(services):
 def render_price_list_hotel_detail(urls):
     price_list = []
 
-    for url in urls:
-        domain_id = str(url.domain_id)
-        domain_hotel_id = str(url.domain_hotel_id)
-        params = domain_id+ "_" +domain_hotel_id+ "_" + date
-        payload =  '{"hotel_ids": '+'"'+params+'"'+'}'
+    # for url in urls:
+    #     domain_id = str(url.domain_id)
+    #     domain_hotel_id = str(url.domain_hotel_id)
+    #     params = domain_id+ "_" +domain_hotel_id+ "_" + date
+    #     payload =  '{"hotel_ids": '+'"'+params+'"'+'}'
 
-        current_price = get_price(payload)
-        domain = Domain.objects.get(id=url.domain_id)
-        if current_price != float('inf'):
-            price_list.append({
-                'platform': domain.name,
-                'value': current_price
-            })
-    
+    #     current_price = get_price(payload)
+    #     domain = Domain.objects.get(id=url.domain_id)
+    #     if current_price != float('inf'):
+    #         price_list.append({
+    #             'platform': domain.name,
+    #             'value': current_price
+    #         })
+
+    price_dict = get_all_price_domain_hotel(urls)
+    for domain in price_dict:
+        price_list.append({
+            'platform': domain,
+            'value': min(price_dict[domain])
+        })
+
     return price_list
 
 def render_facilities_hotel_detail(quality):
@@ -191,7 +198,7 @@ def render_hotel_list_template(root, total):
     for i in range(len(root)):
         urls = Url.objects.filter(root_id = root[i].id)
         quality = Quality.objects.filter(root_id = root[i].id)
-        [min_price, domain_id] = get_min_price_hotel(urls)
+        min_price, domain_id = get_min_price_hotel(urls)
 
         if (domain_id != -1):
             if domain_id == '2' :

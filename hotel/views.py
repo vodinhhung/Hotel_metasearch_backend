@@ -2,15 +2,15 @@ from django.db.models.expressions import F
 from django.http import HttpResponse
 from django.core import serializers
 import json
+
 from hotel.models import Province, Root, Url, Quality, Info
-from hotel.serializers import RootSerializer
 from hotel.templates import render_hotel_detail_template, render_hotel_list_template
-from hotel.tools import get_price, get_min_price_domain
 
 def hotel_list(request):
     if request.method == 'GET':
         #get params (destination, page)    
         province_name = request.GET.get('destination', None)
+        province = []
         if province_name is not None:
             province = Province.objects.filter(name=province_name)
         province_id = province[0].id
