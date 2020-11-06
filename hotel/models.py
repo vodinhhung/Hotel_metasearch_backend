@@ -43,11 +43,12 @@ class Root(models.Model):
     check_out = models.CharField(max_length=20, null=True)
     description = models.TextField(null=True)
     street = models.CharField(max_length=500, null=True)
+    min_price_domain = models.BigIntegerField()
 
 
 class Info(models.Model):
     index = models.IntegerField()
-    root = models.ForeignKey(Root, primary_key=True, on_delete=models.CASCADE)
+    root = models.OneToOneField(Root, primary_key=True, on_delete=models.CASCADE, unique=True)
     have_breakfast = models.IntegerField()
     is_free_wifi = models.IntegerField()
     have_car_park = models.IntegerField()
@@ -64,7 +65,7 @@ class Info(models.Model):
 
 class Quality(models.Model):
     index = models.IntegerField()
-    root = models.ForeignKey(Root, primary_key=True, on_delete=models.CASCADE)
+    root = models.OneToOneField(Root, primary_key=True, on_delete=models.CASCADE)
     cleanliness_scores = models.FloatField(max_length=5)
     meal_score = models.FloatField(max_length=5)
     location_score = models.FloatField(max_length=5)
@@ -72,8 +73,9 @@ class Quality(models.Model):
     room_score = models.FloatField(max_length=5)
     service_score = models.FloatField(max_length=5)
     facility_score = models.FloatField(max_length=5)
-    overall_score = models.FloatField(max_length=5)
-
+    overall_score = models.FloatField(max_length=5, null=True)
+    num_review = models.IntegerField(null=True)
+    review_score = models.FloatField(max_length=5, null=True)
 
 class Url(models.Model):
     index = models.IntegerField(primary_key=True)
@@ -81,5 +83,6 @@ class Url(models.Model):
     domain_hotel_id = models.CharField(max_length=100)
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
     url = models.CharField(max_length=2083)
+    min_price = models.BigIntegerField()
 
 

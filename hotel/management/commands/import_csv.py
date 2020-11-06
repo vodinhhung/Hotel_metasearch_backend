@@ -23,10 +23,10 @@ province = "COPY hotel_province FROM "+"'"+BASE_DIR+"/data/province.csv"+"'"+" D
 district = "COPY hotel_district FROM "+"'"+BASE_DIR+"/data/district.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 street = "COPY hotel_street FROM "+"'"+BASE_DIR+"/data/street.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 domain = "COPY hotel_domain FROM "+"'"+BASE_DIR+"/data/domain.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-root_hotel = "COPY hotel_root FROM "+"'"+BASE_DIR+"/data/root.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-hotel_quality = "COPY hotel_quality FROM "+"'"+BASE_DIR+"/data/quality.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+root_hotel = "COPY hotel_root FROM "+"'"+BASE_DIR+"/data/root_new.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+hotel_quality = "COPY hotel_quality FROM "+"'"+BASE_DIR+"/data/quality_new.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 hotel_info = "COPY hotel_info FROM "+"'"+BASE_DIR+"/data/info.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-hotel_url = "COPY hotel_url FROM "+"'"+BASE_DIR+"/data/url.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+hotel_url = "COPY hotel_url FROM "+"'"+BASE_DIR+"/data/url_new.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 
 cur.execute(drop_quality)
 conn.commit()
