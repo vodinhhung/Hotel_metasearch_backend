@@ -6,10 +6,10 @@ import json
 
 from hotel.models import Province, Root, Url, Quality, Info
 from hotel.serializers import RootSerializer
-from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like
+from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view
 from hotel.tools.tools import hotel_list_filter_facility
 from hotel.tools.login_tools import call_facebook_api, save_user_database
-from hotel.tools.user_tools import save_like
+from hotel.tools.user_tools import save_like, save_view
 
 def hotel_list(request):
     if request.method == 'GET':
@@ -98,5 +98,23 @@ def hotel_like(request):
     elif request.method == "GET":
         user_id = request.GET.get("user_id", "")
         response = render_hotel_list_template_like(user_id)
+    
+    return HttpResponse(json.dumps(response), content_type='application/json')
+
+@csrf_exempt
+def hotel_view(request):
+    response = {}
+    if request.method == "POST":
+        request_body = json.loads(request.body)
+        hotel_id = request_body['hotel_id']
+        user_id = request_body['user_id']
+
+        save_view_status = save_view(hotel_id, user_id)
+        response = {
+            'status': save_view_status,
+        }
+    else:
+        user_id = request.GET.get("user_id", "")
+        response = render_hotel_list_template_view(user_id)
     
     return HttpResponse(json.dumps(response), content_type='application/json')

@@ -1,6 +1,6 @@
 from datetime import date
 
-from hotel.models import Domain, Like, Url, Quality, Root, User
+from hotel.models import Domain, Like, Url, Quality, Root, User, View
 from hotel.tools.tools import get_price, get_min_price_hotel
 
 today = date.today() 
@@ -228,7 +228,6 @@ def render_hotel_template_hotel_list(root):
     return item
 
 def render_hotel_list_template_like(user_id):
-    print(user_id, "USER ID")
     user = User.objects.get(social_id = user_id)
     likes = Like.objects.filter(user_id = user.index)
     items = []
@@ -240,6 +239,23 @@ def render_hotel_list_template_like(user_id):
     
     hotel_list_dic = {
         'items': items,
+        'total_item': len(items),
+    }
+
+    return hotel_list_dic
+
+def render_hotel_list_template_view(user_id):
+    user = User.objects.get(social_id = user_id)
+    views = View.objects.filter(user_id = user.index)
+    items = []
+
+    for view in views:
+        root_id = view.root_id
+        hotel = Root.objects.get(id = root_id)
+        items.append(render_hotel_template_hotel_list(hotel))
+    
+    hotel_list_dic = {
+        'items': items[::-1],
         'total_item': len(items),
     }
 
