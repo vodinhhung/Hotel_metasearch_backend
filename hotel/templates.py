@@ -229,7 +229,7 @@ def render_hotel_template_hotel_list(root):
 
 def render_hotel_list_template_like(user_id):
     user = User.objects.get(social_id = user_id)
-    likes = Like.objects.filter(user_id = user.index)
+    likes = Like.objects.filter(user_id = user.index, status = 1)
     items = []
 
     for like in likes:
