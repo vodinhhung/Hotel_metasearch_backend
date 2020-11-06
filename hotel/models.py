@@ -102,6 +102,19 @@ class Url(models.Model):
     def __str__(self):
         return self.url
 
+
+class Review(models.Model):
+    index = models.IntegerField(primary_key=True)
+    root = models.ForeignKey(Root, on_delete=models.CASCADE)
+    domain_hotel_id = models.CharField(max_length=100)
+    domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
+    langcode = models.CharField(max_length=10, null=True)
+    date_time = models.CharField(max_length=50)
+    title = models.TextField(null=True)
+    text = models.TextField(null=True)
+    score = models.FloatField(max_length=5)
+
+
 class User(models.Model):
     index = models.AutoField(primary_key=True)
     social_id = models.CharField(max_length=2083)
@@ -110,3 +123,4 @@ class User(models.Model):
 
     def __str__(self) -> str:
         return self.name
+

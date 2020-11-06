@@ -17,6 +17,7 @@ drop_info= "DELETE FROM hotel_info"
 drop_province= "DELETE FROM hotel_province"
 drop_district= "DELETE FROM hotel_district"
 drop_street= "DELETE FROM hotel_street"
+drop_review = "DELETE FROM hotel_review"
 drop_url= "DELETE FROM hotel_url"
 drop_domain = "DELETE FROM hotel_domain"
 province = "COPY hotel_province FROM "+"'"+BASE_DIR+"/data/province.csv"+"'"+" DELIMITER ',' CSV HEADER;"
@@ -27,7 +28,7 @@ root_hotel = "COPY hotel_root FROM "+"'"+BASE_DIR+"/data/root_new.csv"+"'"+" DEL
 hotel_quality = "COPY hotel_quality FROM "+"'"+BASE_DIR+"/data/quality_new.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 hotel_info = "COPY hotel_info FROM "+"'"+BASE_DIR+"/data/info.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 hotel_url = "COPY hotel_url FROM "+"'"+BASE_DIR+"/data/url_new.csv"+"'"+" DELIMITER ',' CSV HEADER;"
-
+hotel_review = "COPY hotel_review FROM "+"'"+BASE_DIR+"/data/review.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 cur.execute(drop_quality)
 conn.commit()
 
@@ -38,6 +39,9 @@ cur.execute(drop_url)
 conn.commit()
 
 cur.execute(drop_root)
+conn.commit()
+
+cur.execute(drop_review)
 conn.commit()
 
 cur.execute(drop_street)
@@ -75,6 +79,9 @@ cur.execute(hotel_info)
 conn.commit()
 
 cur.execute(hotel_url)
+conn.commit()
+
+cur.execute(hotel_review)
 conn.commit()
 
 print("Operation done successfully")
