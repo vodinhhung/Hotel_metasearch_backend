@@ -71,12 +71,14 @@ def login_user(request):
             response = {
                 'status': False,
                 'user': {},
+                'access_token': "",
             }
         else:
-            save_user_database(facebook_response[1], 1)
+            access_token = save_user_database(facebook_response[1], 1)
             response = {
                 'status': True,
-                'user': facebook_response[1]
+                'user': facebook_response[1],
+                'access_token': access_token,
             }
 
     return HttpResponse(json.dumps(response), content_type='application/json')

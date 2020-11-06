@@ -1,6 +1,10 @@
 import requests
+from datetime import date
 
 from hotel.models import User
+
+today = date.today() 
+date = str(today.year)+str(today.month)+str(today.day)
 
 def call_facebook_api(token):
     url = "https://graph.facebook.com/v8.0/me"
@@ -37,3 +41,6 @@ def save_user_database(info, domain):
             social_domain = domain,
         )
         new_user.save()
+
+    access_token = social_id + "@@@" + date
+    return access_token
