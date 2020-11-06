@@ -1,7 +1,7 @@
 from datetime import date
 
 from hotel.models import Domain, Url, Quality, Root
-from hotel.tools import get_price, get_min_price_domain, get_min_price_hotel
+from hotel.tools.tools import get_price, get_min_price_hotel
 
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)

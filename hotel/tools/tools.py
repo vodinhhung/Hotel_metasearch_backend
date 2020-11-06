@@ -2,6 +2,7 @@ import requests
 import base64
 from datetime import date
 from hotel.models import Domain, Url, Quality, Root, Info
+
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
 

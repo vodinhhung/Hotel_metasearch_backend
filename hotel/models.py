@@ -97,3 +97,12 @@ class Url(models.Model):
 
     def __str__(self):
         return self.url
+
+class User(models.Model):
+    index = models.AutoField(primary_key=True)
+    social_id = models.CharField(max_length=2083)
+    name = models.CharField(max_length=2083)
+    social_domain = models.IntegerField()
+
+    def __str__(self) -> str:
+        return self.name
