@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'hotel',
 ]
 
@@ -77,15 +78,10 @@ WSGI_APPLICATION = 'hotel_metasearch.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
         'NAME': 'hotel_metasearch',
-
         'USER': 'postgres',
-
         'PASSWORD': '123',
-
         'HOST': 'localhost',
-
         'PORT': '5432',
     }
 }

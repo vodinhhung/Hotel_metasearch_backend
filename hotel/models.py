@@ -13,6 +13,9 @@ class District(models.Model):
     province = models.ForeignKey(Province,on_delete=models.SET_NULL,null=True)
     name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
 
 class Street(models.Model):
     index = models.IntegerField()
@@ -21,11 +24,17 @@ class Street(models.Model):
     district = models.ForeignKey(District,on_delete=models.SET_NULL,null=True)
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 class Domain(models.Model):
     index = models.IntegerField()
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
 
 
 class Root(models.Model):
@@ -45,6 +54,9 @@ class Root(models.Model):
     street = models.CharField(max_length=500, null=True)
     min_price_domain = models.BigIntegerField()
 
+    def __str__(self):
+        return self.name
+
 
 class Info(models.Model):
     index = models.IntegerField()
@@ -61,7 +73,9 @@ class Info(models.Model):
     have_tour = models.IntegerField()
     have_spa = models.IntegerField()
     have_pool = models.IntegerField()
-
+    
+    def __str__(self):
+        return self.root.name
 
 class Quality(models.Model):
     index = models.IntegerField()
@@ -85,4 +99,14 @@ class Url(models.Model):
     url = models.CharField(max_length=2083)
     min_price = models.BigIntegerField()
 
+    def __str__(self):
+        return self.url
 
+class User(models.Model):
+    index = models.AutoField(primary_key=True)
+    social_id = models.CharField(max_length=2083)
+    name = models.CharField(max_length=2083)
+    social_domain = models.IntegerField()
+
+    def __str__(self) -> str:
+        return self.name
