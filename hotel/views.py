@@ -1,11 +1,14 @@
 from django.db.models.expressions import F
 from django.http import HttpResponse
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 import json
+
 from hotel.models import Province, Root, Url, Quality, Info
 from hotel.serializers import RootSerializer
 from hotel.templates import render_hotel_detail_template, render_hotel_list_template
-from hotel.tools import get_price, get_min_price_domain, hotel_list_filter_facility
+from hotel.tools.tools import hotel_list_filter_facility
+from hotel.tools.login_tools import call_facebook_api, save_user_database
 
 def hotel_list(request):
     if request.method == 'GET':
@@ -57,3 +60,23 @@ def province_list(request):
         
         b = serializers.serialize('json', province)
         return HttpResponse(b, content_type='application/json')
+
+@csrf_exempt
+def login_user(request):
+    response = {}
+    if request.method == 'POST':
+        token = request.headers.get('Authorization')[7:]
+        facebook_response = call_facebook_api(token)
+        if not facebook_response[0]:
+            response = {
+                'status': False,
+                'user': {},
+            }
+        else:
+            save_user_database(facebook_response[1], 1)
+            response = {
+                'status': True,
+                'user': facebook_response[1]
+            }
+
+    return HttpResponse(json.dumps(response), content_type='application/json')
