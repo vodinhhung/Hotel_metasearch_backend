@@ -106,3 +106,9 @@ class User(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+class Like(models.Model):
+    index = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    root = models.ForeignKey(Root, on_delete=models.CASCADE)
+    status = models.IntegerField(null=True)
