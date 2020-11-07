@@ -38,10 +38,10 @@ conn.commit()
 cur.execute(drop_url)
 conn.commit()
 
-cur.execute(drop_root)
+cur.execute(drop_review)
 conn.commit()
 
-cur.execute(drop_review)
+cur.execute(drop_root)
 conn.commit()
 
 cur.execute(drop_street)
