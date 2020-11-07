@@ -1,6 +1,6 @@
 from datetime import date
 
-from hotel.models import Domain, Url, Quality, Root
+from hotel.models import Domain, Like, Url, Quality, Root, User, View
 from hotel.tools.tools import get_price, get_min_price_hotel
 
 today = date.today() 
@@ -189,35 +189,74 @@ def render_facilities_hotel_detail(quality):
 def render_hotel_list_template(root, total):
     items = []
     for i in range(0,root.count()):
-        urls = Url.objects.filter(root_id = root[i].id)
-        quality = Quality.objects.filter(root_id = root[i].id)
-        [min_price, domain_id] = get_min_price_hotel(urls)
-
-        if (domain_id != -1):
-            if domain_id == '2' :
-                domain = 'Traveloka'
-            elif domain_id == '3' :
-                domain = 'Agoda'
-            elif domain_id == '5' :
-                domain = 'Booking'
-            else:
-                domain = 'None'
-
-            item = {
-                'id': root[i].id,
-                'name': root[i].name,
-                'address': root[i].address,
-                'star': root[i].star, 
-                'logo': root[i].logo,
-                'overall_score': quality[0].overall_score, 
-                'price': {
-                    'domain': domain, 
-                    'value': min_price
-                }
-            }
-
-            items.append(item)
+        item = render_hotel_template_hotel_list(root[i])
+        items.append(item)
             
     hotel_list_dict = { "items": items,
                         "total_item": total }
     return hotel_list_dict
+
+def render_hotel_template_hotel_list(root):
+    urls = Url.objects.filter(root_id = root.id)
+    quality = Quality.objects.filter(root_id = root.id)
+    [min_price, domain_id] = get_min_price_hotel(urls)
+    item = {}
+
+    if (domain_id != -1):
+        if domain_id == '2' :
+            domain = 'Traveloka'
+        elif domain_id == '3' :
+            domain = 'Agoda'
+        elif domain_id == '5' :
+            domain = 'Booking'
+        else:
+            domain = 'None'
+
+        item = {
+            'id': root.id,
+            'name': root.name,
+            'address': root.address,
+            'star': root.star, 
+            'logo': root.logo,
+            'overall_score': quality[0].overall_score, 
+            'price': {
+                'domain': domain, 
+                'value': min_price
+            }
+        }
+
+    return item
+
+def render_hotel_list_template_like(user_id):
+    user = User.objects.get(social_id = user_id)
+    likes = Like.objects.filter(user_id = user.index, status = 1)
+    items = []
+
+    for like in likes:
+        root_id = like.root_id
+        hotel = Root.objects.get(id = root_id)
+        items.append(render_hotel_template_hotel_list(hotel))
+    
+    hotel_list_dic = {
+        'items': items,
+        'total_item': len(items),
+    }
+
+    return hotel_list_dic
+
+def render_hotel_list_template_view(user_id):
+    user = User.objects.get(social_id = user_id)
+    views = View.objects.filter(user_id = user.index)
+    items = []
+
+    for view in views:
+        root_id = view.root_id
+        hotel = Root.objects.get(id = root_id)
+        items.append(render_hotel_template_hotel_list(hotel))
+    
+    hotel_list_dic = {
+        'items': items[::-1],
+        'total_item': len(items),
+    }
+
+    return hotel_list_dic

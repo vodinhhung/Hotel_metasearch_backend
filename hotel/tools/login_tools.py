@@ -44,3 +44,23 @@ def save_user_database(info, domain):
 
     access_token = social_id + "@@@" + date
     return access_token
+
+def check_token_user(token):
+    if token is None or token == "":
+        return ["", False]
+    
+    token = token[7:]
+    current_date = ""
+    user_id = ""
+    index = 0
+    for i in range(len(token)-2):
+        if token[i] == '@' and token[i+1] == '@' and token[i+2] == '@':
+            user_id = token[:i]
+            current_date = token[(i+3):]
+            index += 1
+            break
+    
+    if index == len(token)-3 or current_date != date or not User.objects.filter(social_id = user_id).exists():
+        return ["", False]
+
+    return [user_id, True]

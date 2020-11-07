@@ -6,9 +6,10 @@ import json
 
 from hotel.models import Province, Root, Url, Quality, Info
 from hotel.serializers import RootSerializer
-from hotel.templates import render_hotel_detail_template, render_hotel_list_template
+from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view
 from hotel.tools.tools import hotel_list_filter_facility
-from hotel.tools.login_tools import call_facebook_api, save_user_database
+from hotel.tools.login_tools import call_facebook_api, save_user_database, check_token_user
+from hotel.tools.user_tools import save_like, save_view
 
 def hotel_list(request):
     if request.method == 'GET':
@@ -81,4 +82,51 @@ def login_user(request):
                 'access_token': access_token,
             }
 
+    return HttpResponse(json.dumps(response), content_type='application/json')
+
+@csrf_exempt
+def hotel_like(request):
+    response = {}
+    if request.method == "POST":
+        user_id, is_valid = check_token_user(request.headers.get('Authorization'))
+        request_body = json.loads(request.body)
+        hotel_id = request_body['hotel_id']
+
+        if is_valid:
+            save_success, action = save_like(hotel_id, user_id)
+            response = {
+                'status': save_success,
+                'action': ['Unlike', 'Like'][action == 1]
+            }
+        else:
+            response = {
+                'status': False,
+            }
+    elif request.method == "GET":
+        user_id = request.GET.get("user_id", "")
+        response = render_hotel_list_template_like(user_id)
+    
+    return HttpResponse(json.dumps(response), content_type='application/json')
+
+@csrf_exempt
+def hotel_view(request):
+    response = {}
+    if request.method == "POST":
+        user_id, is_valid = check_token_user(request.headers.get('Authorization'))
+        request_body = json.loads(request.body)
+        hotel_id = request_body['hotel_id']
+
+        if is_valid:
+            save_view_status = save_view(hotel_id, user_id)
+            response = {
+                'status': save_view_status,
+            }
+        else:
+            response = {
+                'status': False,
+            }
+    else:
+        user_id = request.GET.get("user_id", "")
+        response = render_hotel_list_template_view(user_id)
+    
     return HttpResponse(json.dumps(response), content_type='application/json')
