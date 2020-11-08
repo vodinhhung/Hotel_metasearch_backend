@@ -1,7 +1,7 @@
 from datetime import date
 
 from hotel.models import Domain, Like, Url, Quality, Root, User, View
-from hotel.tools.tools import get_price, get_min_price_hotel
+from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database
 
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
@@ -190,7 +190,8 @@ def render_hotel_list_template(root, total):
     items = []
     for i in range(0,root.count()):
         item = render_hotel_template_hotel_list(root[i])
-        items.append(item)
+        if item != {}:
+            items.append(item)
             
     hotel_list_dict = { "items": items,
                         "total_item": total }
@@ -199,18 +200,19 @@ def render_hotel_list_template(root, total):
 def render_hotel_template_hotel_list(root):
     urls = Url.objects.filter(root_id = root.id)
     quality = Quality.objects.filter(root_id = root.id)
-    [min_price, domain_id] = get_min_price_hotel(urls)
+    #[min_price, domain_id] = get_min_price_hotel(urls)
+    [min_price, domain_id] = get_min_price_hotel_database(urls)
     item = {}
 
     if (domain_id != -1):
-        if domain_id == '2' :
+        if str(domain_id) == '2' :
             domain = 'Traveloka'
-        elif domain_id == '3' :
+        elif str(domain_id) == '3' :
             domain = 'Agoda'
-        elif domain_id == '5' :
+        elif str(domain_id) == '5' :
             domain = 'Booking'
         else:
-            domain = 'None'
+            domain = 'Expedia'
 
         item = {
             'id': root.id,

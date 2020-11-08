@@ -22,11 +22,15 @@ def hotel_list(request):
         star = request.GET.get('star', None)
         if star is not None:
             root = root.filter(star=int(star))
-        #min_price = request.GET.get('PriceFrom', None)
-        #max_price = request.GET.get('PriceTo', None)
         facility = request.GET.get('facility', None)
         root = hotel_list_filter_facility(root,facility)
         total = root.count()
+        # min_price = request.GET.get('PriceFrom', None)
+        # max_price = request.GET.get('PriceTo', None)
+        # if min_price is not None:
+        #     root = root.filter(min_price_domain > min_price)
+        # if max_price is not None:
+        #     root = root.filter(min_price_domain < max_price)
         page = request.GET.get('page', None)
         if page is not None:
             num_p = (int(page)-1)*5
