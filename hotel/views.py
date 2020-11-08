@@ -132,10 +132,7 @@ def hotel_view(request):
                 'status': False,
             }
     else:
-        print(request.headers.get('Authorization'))
         user_id, is_valid = check_token_user(request.headers.get('Authorization'))
-        print(user_id, "USER")
-        print(is_valid, "VALID")
         if is_valid:
             response = render_hotel_list_template_view(user_id)
         else:
