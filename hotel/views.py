@@ -66,7 +66,8 @@ def province_list(request):
 def login_user(request):
     response = {}
     if request.method == 'POST':
-        token = request.headers.get('Authorization')[7:]
+        request_body = json.loads(request.body)
+        token = request_body['access_token']
         facebook_response = call_facebook_api(token)
         if not facebook_response[0]:
             response = {
@@ -103,8 +104,13 @@ def hotel_like(request):
                 'status': False,
             }
     elif request.method == "GET":
-        user_id = request.GET.get("user_id", "")
-        response = render_hotel_list_template_like(user_id)
+        user_id, is_valid = check_token_user(request.headers.get('Authorization'))
+        if is_valid:
+            response = render_hotel_list_template_like(user_id)
+        else:
+            response = {
+                'status': False,
+            }
     
     return HttpResponse(json.dumps(response), content_type='application/json')
 
@@ -126,7 +132,12 @@ def hotel_view(request):
                 'status': False,
             }
     else:
-        user_id = request.GET.get("user_id", "")
-        response = render_hotel_list_template_view(user_id)
+        user_id, is_valid = check_token_user(request.headers.get('Authorization'))
+        if is_valid:
+            response = render_hotel_list_template_view(user_id)
+        else:
+            response = {
+                'status': False
+            } 
     
     return HttpResponse(json.dumps(response), content_type='application/json')
