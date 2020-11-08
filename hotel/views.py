@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.db.models import Q
 
 from hotel.models import Province, Root, Url, Quality, Info
 from hotel.serializers import RootSerializer
@@ -22,15 +23,22 @@ def hotel_list(request):
         star = request.GET.get('star', None)
         if star is not None:
             root = root.filter(star=int(star))
+        min_price = request.GET.get('PriceFrom', None)
+        max_price = request.GET.get('PriceTo', None)
+        if min_price is not None:
+            root = root.filter(min_price_domain__gte = min_price)
+        if max_price is not None:
+            root = root.filter(min_price_domain__lte = max_price)
         facility = request.GET.get('facility', None)
         root = hotel_list_filter_facility(root,facility)
+        sort = request.GET.get('sort', None)
+        if sort is not None:
+            root = root.filter(~Q(min_price_domain = -1))
+            if str(sort) == 'asc':
+                root = root.order_by('min_price_domain')
+            else:
+                root = root.order_by('-min_price_domain')
         total = root.count()
-        # min_price = request.GET.get('PriceFrom', None)
-        # max_price = request.GET.get('PriceTo', None)
-        # if min_price is not None:
-        #     root = root.filter(min_price_domain > min_price)
-        # if max_price is not None:
-        #     root = root.filter(min_price_domain < max_price)
         page = request.GET.get('page', None)
         if page is not None:
             num_p = (int(page)-1)*5
