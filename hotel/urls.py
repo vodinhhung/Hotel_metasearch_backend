@@ -7,7 +7,7 @@ urlpatterns = [
     url(r'^hotel$', views.hotel_list),
     url(r'^hotel/search$', views.hotel_search),
     path('hotel/<int:id>/', views.hotel_detail),
-    path('hotel/login', views.login_user),
     path('hotel/like', views.hotel_like),
+    path('hotel/login', views.login_user),
     path('hotel/view', views.hotel_view)
 ]
