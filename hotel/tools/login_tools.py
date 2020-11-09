@@ -10,7 +10,7 @@ def call_facebook_api(token):
     url = "https://graph.facebook.com/v8.0/me"
     parameters = {
         "access_token": token,
-        "field": "id, name"
+        "fields": "id, name, picture"
     }
     response = requests.get(url, params=parameters)
     
