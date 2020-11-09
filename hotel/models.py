@@ -5,6 +5,7 @@ class Province(models.Model):
     index = models.IntegerField()
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=20)
+    name_no_accent = models.CharField(max_length=20)
 
 
 class District(models.Model):
@@ -41,6 +42,7 @@ class Root(models.Model):
     index = models.IntegerField()
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=500)
+    name_no_accent = models.CharField(max_length=500)
     address = models.CharField(max_length=500, null=True)
     logo = models.CharField(max_length=2083, null=True)
     province = models.ForeignKey(Province,  on_delete=models.CASCADE, null=True)

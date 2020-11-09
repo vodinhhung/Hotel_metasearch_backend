@@ -1,6 +1,7 @@
 from datetime import date
+import unidecode
 
-from hotel.models import Domain, Like, Url, Quality, Root, User, View
+from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
 from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database
 
 today = date.today() 
@@ -185,6 +186,28 @@ def render_facilities_hotel_detail(quality):
         index += 1
     
     return lists
+
+def render_search_list_template(text):
+    province_items = []
+    hotel_items = []
+    text = unidecode.unidecode(text).lower()
+    provinces = Province.objects.filter(name_no_accent__contains=text)[0:10]
+    roots = Root.objects.filter(name_no_accent__contains=text)[0:10]
+    for province in provinces:
+        province_items.append({
+            'id': province.id,
+            'name': province.name
+        })
+
+    for root in roots:
+        hotel_items.append({
+            'id': root.id,
+            'name': root.name
+        })
+    
+    search_list_dict = {"province_items": province_items,
+                        "hotel_items": hotel_items }
+    return search_list_dict
 
 def render_hotel_list_template(root, total):
     items = []

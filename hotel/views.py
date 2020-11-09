@@ -7,7 +7,7 @@ from django.db.models import Q
 
 from hotel.models import Province, Root, Url, Quality, Info
 from hotel.serializers import RootSerializer
-from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view
+from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view, render_search_list_template
 from hotel.tools.tools import hotel_list_filter_facility
 from hotel.tools.login_tools import call_facebook_api, save_user_database, check_token_user
 from hotel.tools.user_tools import save_like, save_view
@@ -50,6 +50,24 @@ def hotel_list(request):
         hotel_list_dict = render_hotel_list_template(root, total)
         hotel_list_json = json.dumps(hotel_list_dict)
         return HttpResponse(hotel_list_json, content_type="application/json")
+
+def hotel_search(request):
+    if request.method == 'GET':
+        #filter with params search    
+        text = request.GET.get('text', None)
+        province_items = []
+        hotel_items = []
+        if text is not None:
+            search_list_dict = render_search_list_template(text)
+        else:
+            search_list_dict = {"province_items":  [{ "id": 11, "name": "Hà Nội" },
+                                                    { "id": 33, "name": "Hồ Chí Minh" },
+                                                    { "id": 1, "name": "Thừa Thiên - Huế" },
+                                                    { "id": 50, "name": "Đà Nẵng" },
+                                                    { "id": 16, "name": "Thanh Hóa" }],
+                                "hotel_items": []}
+        search_list_json = json.dumps(search_list_dict)
+        return HttpResponse(search_list_json, content_type="application/json")
 
 def hotel_detail(request, id):
     if request.method == "GET":
