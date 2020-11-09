@@ -1,7 +1,8 @@
 from datetime import date
+import unidecode
 
-from hotel.models import Domain, Like, Url, Quality, Root, User, View
-from hotel.tools.tools import get_price, get_min_price_hotel
+from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
+from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database
 
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
@@ -190,6 +191,28 @@ def render_facilities_hotel_detail(quality):
     
     return lists
 
+def render_search_list_template(text):
+    province_items = []
+    hotel_items = []
+    text = unidecode.unidecode(text).lower()
+    provinces = Province.objects.filter(name_no_accent__contains=text)[0:10]
+    roots = Root.objects.filter(name_no_accent__contains=text)[0:10]
+    for province in provinces:
+        province_items.append({
+            'id': province.id,
+            'name': province.name
+        })
+
+    for root in roots:
+        hotel_items.append({
+            'id': root.id,
+            'name': root.name
+        })
+    
+    search_list_dict = {"province_items": province_items,
+                        "hotel_items": hotel_items }
+    return search_list_dict
+
 def render_hotel_list_template(root, total):
     items = []
     for i in range(0,root.count()):
@@ -204,18 +227,19 @@ def render_hotel_list_template(root, total):
 def render_hotel_template_hotel_list(root):
     urls = Url.objects.filter(root_id = root.id)
     quality = Quality.objects.filter(root_id = root.id)
-    [min_price, domain_id] = get_min_price_hotel(urls)
+    #[min_price, domain_id] = get_min_price_hotel(urls)
+    [min_price, domain_id] = get_min_price_hotel_database(urls)
     item = {}
 
     if (domain_id != -1):
-        if domain_id == '2' :
+        if str(domain_id) == '2' :
             domain = 'Traveloka'
-        elif domain_id == '3' :
+        elif str(domain_id) == '3' :
             domain = 'Agoda'
-        elif domain_id == '5' :
+        elif str(domain_id) == '5' :
             domain = 'Booking'
         else:
-            domain = 'None'
+            domain = 'Expedia'
 
         item = {
             'id': root.id,

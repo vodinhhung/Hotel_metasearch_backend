@@ -90,6 +90,20 @@ def get_min_price_hotel(urls):
     
     return [min_price, min_domain_id]
 
+def get_min_price_hotel_database(urls):
+    min_price = float('inf')
+    min_domain_id = -1
+    for url in urls:
+        t = url.min_price
+        if (t > 0) and (t < min_price):
+            min_price = t
+            min_domain_id = url.domain_id
+        
+    if min_price == float('inf'):
+        min_price = -1
+    
+    return [min_price, min_domain_id]
+
 def hotel_list_filter_facility(root, facility):
     root_filter = root
     if facility is not None:
