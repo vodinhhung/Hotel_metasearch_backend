@@ -1,3 +1,4 @@
+from hotel.views import hotel_like
 from django.urls import path
 from django.conf.urls import url 
 from . import views
@@ -7,7 +8,7 @@ urlpatterns = [
     url(r'^hotel$', views.hotel_list),
     url(r'^hotel/search$', views.hotel_search),
     path('hotel/<int:id>/', views.hotel_detail),
-    path('hotel/like', views.hotel_like),
     path('hotel/login', views.login_user),
-    path('hotel/view', views.hotel_view)
+    path('hotel/view', views.hotel_view),
+    path('hotel/like', views.hotel_like)
 ]
