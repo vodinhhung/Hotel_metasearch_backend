@@ -194,7 +194,7 @@ def render_facilities_hotel_detail(quality):
 def render_search_list_template(text):
     province_items = []
     hotel_items = []
-    text = unidecode.unidecode(text).lower()
+    text = unidecode.unidecode(text).lower().rstrip(' ').lstrip(' ')
     provinces = Province.objects.filter(name_no_accent__contains=text)[0:10]
     roots = Root.objects.filter(name_no_accent__contains=text)[0:10]
     for province in provinces:
