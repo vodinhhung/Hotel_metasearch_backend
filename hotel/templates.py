@@ -17,6 +17,10 @@ def render_hotel_detail_template(hotel, services, urls, quality):
         'rating': {
             'value': hotel.star,
         },
+        'position': {
+            'lat': hotel.lat,
+            'long': hotel.long,
+        },
         'linking': render_url_hotel_detail(urls),
         'services': render_service_hotel_detail(services),
         'prices': render_price_list_hotel_detail(urls),

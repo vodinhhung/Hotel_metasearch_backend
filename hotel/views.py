@@ -92,6 +92,7 @@ def province_list(request):
         b = serializers.serialize('json', province)
         return HttpResponse(b, content_type='application/json')
 
+## Login api with method POST
 @csrf_exempt
 def login_user(request):
     response = {}
@@ -99,23 +100,25 @@ def login_user(request):
     token = request_body['access_token']
     domain = request_body['domain']
 
+    domain_response = []
     if domain == 1:
-        facebook_response = call_facebook_api(token)
-        if not facebook_response[0]:
-            response = {
-                'status': False,
-                'user': {},
-                'access_token': "",
-            }
-        else:
-            access_token = save_user_database(facebook_response[1], 1)
-            response = {
-                'status': True,
-                'user': facebook_response[1],
-                'access_token': access_token,
-            }
+        domain_response = call_facebook_api(token)
     else:
-        google_response = call_google_api(token)
+        domain_response = call_google_api(token)
+
+    if not domain_response[0]:
+        response = {
+            'status': False,
+            'user': {},
+            'access_token': "",
+        }
+    else:
+        access_token = save_user_database(domain_response[1], domain)
+        response = {
+            'status': True,
+            'user': domain_response[1],
+            'access_token': access_token,
+        }
 
     return HttpResponse(json.dumps(response), content_type='application/json')
 
