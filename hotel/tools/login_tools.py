@@ -19,6 +19,15 @@ def call_facebook_api(token):
     else:
         return [False, {}]
 
+def call_google_api(token):
+    url = "https://www.googleapis.com/oauth2/v2/userinfo"
+    parameters = {
+        "access_token": token,
+        "alt": "json"
+    }
+    response = requests.get(url, params=parameters)
+    return 0
+
 # Save information of user from response after calling api of domain
 # to local database 
 def save_user_database(info, domain):

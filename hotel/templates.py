@@ -280,12 +280,9 @@ def render_hotel_list_template_view(user_id):
     for view in views:
         root_id = view.root_id
         hotel = Root.objects.get(id = root_id)
-        print(hotel)
         hotel_template = render_hotel_template_hotel_list(hotel)
         if hotel_template != {}:
             items.append(hotel_template)
-
-    print(items)
     
     hotel_list_dic = {
         'status': True,
