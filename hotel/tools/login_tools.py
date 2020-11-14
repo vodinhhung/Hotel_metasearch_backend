@@ -10,7 +10,7 @@ def call_facebook_api(token):
     url = "https://graph.facebook.com/v8.0/me"
     parameters = {
         "access_token": token,
-        "field": "id, name"
+        "fields": "id, name, picture"
     }
     response = requests.get(url, params=parameters)
     
@@ -26,19 +26,28 @@ def call_google_api(token):
         "alt": "json"
     }
     response = requests.get(url, params=parameters)
-    return 0
+
+    if response.status_code == 200:
+        return [True, response.json()]
+    else:
+        return [False, {}]
 
 # Save information of user from response after calling api of domain
 # to local database 
 def save_user_database(info, domain):
     name = info['name']
     social_id = info['id']
+    if domain == 0:
+        picture = info['picture']
+    else:
+        picture = info['picture']['data']['url']
 
     if not User.objects.filter(social_id=social_id, social_domain=domain).exists():
         user = User(
             social_id = social_id,
             name = name,
-            social_domain = domain
+            social_domain = domain,
+            picture = picture
         )
         user.save()
     else:
@@ -48,10 +57,13 @@ def save_user_database(info, domain):
             social_id = social_id,
             name = name,
             social_domain = domain,
+            picture = picture
         )
         new_user.save()
 
+    # Generate new access token
     access_token = social_id + "@@@" + date
+    
     return access_token
 
 def check_token_user(token):
