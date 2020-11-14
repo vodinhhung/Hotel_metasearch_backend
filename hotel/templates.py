@@ -280,6 +280,7 @@ def render_hotel_list_template_view(user_id):
     user = User.objects.get(social_id = user_id)
     views = View.objects.filter(user_id = user.index)
     items = []
+    hotel_list = []
 
     for view in views:
         root_id = view.root_id
@@ -288,9 +289,14 @@ def render_hotel_list_template_view(user_id):
         if hotel_template != {}:
             items.append(hotel_template)
     
+    if len(items) > 10:
+        hotel_list = items[::-1][:10]
+    else:
+        hotel_list = items[::-1]
+    
     hotel_list_dic = {
         'status': True,
-        'items': items[::-1],
+        'items': hotel_list,
         'total_item': len(items),
     }
 
