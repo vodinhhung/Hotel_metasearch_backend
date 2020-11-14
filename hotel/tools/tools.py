@@ -9,7 +9,7 @@ date = str(today.year)+str(today.month)+str(today.day)
 
 def update_min_price(urls):
     #chạy sau khi trả response 60s
-    sleep(5)
+    sleep(60)
     for url in urls:
         domain_id = str(url.domain_id)
         domain_hotel_id = str(url.domain_hotel_id)
@@ -23,7 +23,7 @@ def update_min_price(urls):
 
 def update_min_price_domain(root):
     #chạy sau khi trả response 120s, phải update min_price trước
-    sleep(30)
+    sleep(120)
     urls = Url.objects.filter(root_id = root.id)
     [min_price, min_domain_id] = get_min_price_hotel_database(urls)
     if (min_price != -1) and (int(min_price) != int(root.min_price_domain)):
