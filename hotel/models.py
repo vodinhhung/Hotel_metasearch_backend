@@ -122,6 +122,7 @@ class User(models.Model):
     social_id = models.CharField(max_length=2083)
     name = models.CharField(max_length=2083)
     social_domain = models.IntegerField()
+    picture = models.CharField(max_length=2083, null=True)
 
     def __str__(self) -> str:
         return self.name
