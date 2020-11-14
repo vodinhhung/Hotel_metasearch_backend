@@ -2,9 +2,34 @@ import requests
 import base64
 from datetime import date
 from hotel.models import Domain, Url, Quality, Root, Info
-
+import threading
+from time import sleep
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
+
+def update_min_price(urls):
+    #chạy sau khi trả response 60s
+    sleep(60)
+    for url in urls:
+        domain_id = str(url.domain_id)
+        domain_hotel_id = str(url.domain_hotel_id)
+        params = domain_id+ "_" +domain_hotel_id+ "_" + date
+        payload =  '{"hotel_ids": '+'"'+params+'"'+'}'
+        current_price = get_price(payload)
+        if (current_price != float('inf')) and ((int(current_price) - int(url.min_price)) != 0):
+            url.min_price = int(current_price)
+            url.save()
+            print("Updated min price with domain_hotel_id: ",url.domain_hotel_id)
+
+def update_min_price_domain(root):
+    #chạy sau khi trả response 120s, phải update min_price trước
+    sleep(120)
+    urls = Url.objects.filter(root_id = root.id)
+    [min_price, min_domain_id] = get_min_price_hotel_database(urls)
+    if (min_price != -1) and (int(min_price) != int(root.min_price_domain)):
+        root.min_price_domain = int(min_price)
+        root.save()
+        print("Updated min price domain with root_id:  ",root.id)
 
 def get_price(payload):
     USERNAME = 'CFF'
@@ -91,6 +116,9 @@ def get_min_price_hotel(urls):
     return [min_price, min_domain_id]
 
 def get_min_price_hotel_database(urls):
+    t = threading.Thread(target=update_min_price, args=[urls])
+    t.setDaemon(False)
+    t.start()
     min_price = float('inf')
     min_domain_id = -1
     for url in urls:

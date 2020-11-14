@@ -1,9 +1,9 @@
 from datetime import date
 import unidecode
-
 from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
-from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database
-
+from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain
+import threading
+from time import sleep
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
 
@@ -229,6 +229,9 @@ def render_hotel_template_hotel_list(root):
     quality = Quality.objects.filter(root_id = root.id)
     #[min_price, domain_id] = get_min_price_hotel(urls)
     [min_price, domain_id] = get_min_price_hotel_database(urls)
+    k = threading.Thread(target=update_min_price_domain, args=[root])
+    k.setDaemon(False)
+    k.start()
     item = {}
 
     if (domain_id != -1):
