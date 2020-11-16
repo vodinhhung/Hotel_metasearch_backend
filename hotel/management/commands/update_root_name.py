@@ -22,7 +22,7 @@ cur.execute('''CREATE TABLE root_name_update
       PRIMARY KEY (id));
       ''')
 
-province = "COPY root_name_update FROM "+"'"+BASE_DIR+"/data/update_root_name.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+province = "COPY root_name_update FROM "+"'"+"/tmp/update_root_name.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 
 cur.execute(province)
 
