@@ -105,66 +105,35 @@ def get_min_price_hotel_database(urls):
     return [min_price, min_domain_id]
 
 def hotel_list_filter_facility(root, facility):
-    root_filter = root
+    info_query_10 = Info.objects.filter(is_free_wifi = 1)
+    info_query_11 = Info.objects.filter(have_car_park = 1)
+    info_query_12 = Info.objects.filter(have_airport_transport = 1)
+    info_query_13 = Info.objects.filter(have_restaurant = 1)
+    info_query_14 = Info.objects.filter(have_baby_service = 1)
+    info_query_15 = Info.objects.filter(have_bar = 1)
+    info_query_16 = Info.objects.filter(have_laundry = 1)
+    info_query_17 = Info.objects.filter(have_tour = 1)
+    info_query_18 = Info.objects.filter(have_spa = 1)
+    info_query_19 = Info.objects.filter(have_pool = 1)
     if facility is not None:
         if str(facility).find('10') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.is_free_wifi) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
+            root = root.filter(id__in=info_query_10)
         if str(facility).find('11') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_car_park) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-        
+            root = root.filter(id__in=info_query_11)
         if str(facility).find('12') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_airport_transport) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
+            root = root.filter(id__in=info_query_12)
         if str(facility).find('13') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_restaurant) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
+            root = root.filter(id__in=info_query_13)
         if str(facility).find('14') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_baby_service) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
+            root = root.filter(id__in=info_query_14)
         if str(facility).find('15') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_bar) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
+            root = root.filter(id__in=info_query_15)
         if str(facility).find('16') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_laundry) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
+            root = root.filter(id__in=info_query_16)
         if str(facility).find('17') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_tour) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
+            root = root.filter(id__in=info_query_17)
         if str(facility).find('18') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_spa) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
+            root = root.filter(id__in=info_query_18)
         if str(facility).find('19') > -1:
-            for i in range(0,root.count()):
-                info_query = Info.objects.get(root_id = root[i].id)
-                if (int(info_query.have_pool) != 1):
-                    root_filter = root_filter.exclude(id = root[i].id)
-
-    return root_filter
+            root = root.filter(id__in=info_query_19)
+    return root
