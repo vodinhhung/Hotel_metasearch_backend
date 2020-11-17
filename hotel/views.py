@@ -20,6 +20,13 @@ def hotel_list(request):
             province = Province.objects.filter(name=province_name)
         province_id = province[0].id
         root = Root.objects.filter(province_id = province_id)
+        type = request.GET.get('type', None)
+        if type == 'homestay':
+            root = root.filter(Q(name_no_accent__contains='home stay')|Q(name_no_accent__contains='homestay'))
+        elif type == 'hostel':
+            root = root.filter(name__contains='hostel')
+        else:
+            root = root.exclude(Q(name_no_accent__contains='home stay')|Q(name_no_accent__contains='homestay')|Q(name_no_accent__contains='hostel'))                 
         star = request.GET.get('star', None)
         if star is not None:
             root = root.filter(star=int(star))

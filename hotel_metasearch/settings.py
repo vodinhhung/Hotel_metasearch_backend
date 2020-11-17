@@ -25,7 +25,7 @@ SECRET_KEY = '+(=c$90ijegijt^%5a37xl-h2%a)-6!dgygti++p+blguxf)+a'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['hotelmetasearch.com', '3.1.210.237']
+ALLOWED_HOSTS = ['hotelmetasearch.com', '3.1.210.237', 'localhost']
 
 
 # Application definition
