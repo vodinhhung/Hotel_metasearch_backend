@@ -11,7 +11,12 @@ from hotel.templates import render_hotel_detail_template, render_hotel_list_temp
 from hotel.tools.tools import hotel_list_filter_facility
 from hotel.tools.login_tools import call_facebook_api, save_user_database, check_token_user, call_google_api
 from hotel.tools.user_tools import save_like, save_view
-
+from datetime import date
+import datetime
+today = date.today() 
+date = str(today.year)+str(today.month)+str(today.day)
+tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+date1 = str(tomorrow.year)+str(tomorrow.month)+str(tomorrow.day)
 def hotel_list(request):
     if request.method == 'GET':
         #filter with params (destination, page, wifi, ...)    
@@ -20,6 +25,12 @@ def hotel_list(request):
             province = Province.objects.filter(name=province_name)
         province_id = province[0].id
         root = Root.objects.filter(province_id = province_id)
+        date_from = request.GET.get('dateFrom', None)
+        date_to = request.GET.get('dateTo', None)
+        if date_from is not None:
+            date_from = date
+        if date_to is not None:
+            date_to = date1
         star = request.GET.get('star', None)
         if star is not None:
             root = root.filter(star=int(star))
