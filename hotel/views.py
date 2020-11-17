@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models import Q
 
-from hotel.models import Province, Root, Url, Quality, Info
+from hotel.models import Province, Root, Url, Quality, Info, Review
 from hotel.serializers import RootSerializer
 from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view, render_search_list_template
 from hotel.tools.tools import hotel_list_filter_facility
@@ -109,9 +109,10 @@ def hotel_detail(request, id):
         info = Info.objects.get(root_id=id)
         urls = Url.objects.filter(root_id=id)
         quality = Quality.objects.get(root_id=id)
+        reviews = Review.objects.filter(root_id=id)
 
         # Customise Json response
-        hotel_detail = render_hotel_detail_template(hotel, info, urls, quality)
+        hotel_detail = render_hotel_detail_template(hotel, info, urls, quality, reviews)
         hotel_detail_json = json.dumps(hotel_detail)
         return HttpResponse(hotel_detail_json, content_type="application/json")
 
