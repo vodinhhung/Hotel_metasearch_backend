@@ -7,7 +7,7 @@ from django.db.models import Q
 
 from hotel.models import Province, Root, Url, Quality, Info, Review
 from hotel.serializers import RootSerializer
-from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view, render_search_list_template
+from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view, render_search_list_template, render_hotel_list_template_view_new
 from hotel.tools.tools import hotel_list_filter_facility
 from hotel.tools.login_tools import call_facebook_api, save_user_database, check_token_user, call_google_api
 from hotel.tools.user_tools import save_like, save_view
@@ -205,7 +205,7 @@ def hotel_view(request):
     else:
         user_id, is_valid = check_token_user(request.headers.get('Authorization'))
         if is_valid:
-            response = render_hotel_list_template_view(user_id)
+            response = render_hotel_list_template_view_new(user_id)
         else:
             response = {
                 'status': False
