@@ -33,14 +33,6 @@ def save_like(hotel_id, user_id):
 
 def save_view(hotel_id, user_id):
     user = User.objects.get(social_id = user_id)
-
-    # Insert view to database
-    # if View.objects.filter(root_id = hotel_id, user_id = user.index).exists():
-    #     view = View.objects.filter(
-    #         root_id = hotel_id,
-    #         user_id = user.index
-    #     )
-    #     view.delete()
     
     view = View(
         root_id = hotel_id,

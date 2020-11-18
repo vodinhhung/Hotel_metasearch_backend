@@ -289,33 +289,33 @@ def render_hotel_list_template_like(user_id):
 
     return hotel_list_dic
 
+# def render_hotel_list_template_view(user_id):
+#     user = User.objects.get(social_id = user_id)
+#     views = View.objects.filter(user_id = user.index)
+#     items = []
+#     hotel_list = []
+
+#     for view in views:
+#         root_id = view.root_id
+#         hotel = Root.objects.get(id = root_id)
+#         hotel_template = render_hotel_template_hotel_list(hotel)
+#         if hotel_template != {}:
+#             items.append(hotel_template)
+    
+#     if len(items) > 10:
+#         hotel_list = items[::-1][:10]
+#     else:
+#         hotel_list = items[::-1]
+    
+#     hotel_list_dic = {
+#         'status': True,
+#         'items': hotel_list,
+#         'total_item': len(items),
+#     }
+
+#     return hotel_list_dic
+
 def render_hotel_list_template_view(user_id):
-    user = User.objects.get(social_id = user_id)
-    views = View.objects.filter(user_id = user.index)
-    items = []
-    hotel_list = []
-
-    for view in views:
-        root_id = view.root_id
-        hotel = Root.objects.get(id = root_id)
-        hotel_template = render_hotel_template_hotel_list(hotel)
-        if hotel_template != {}:
-            items.append(hotel_template)
-    
-    if len(items) > 10:
-        hotel_list = items[::-1][:10]
-    else:
-        hotel_list = items[::-1]
-    
-    hotel_list_dic = {
-        'status': True,
-        'items': hotel_list,
-        'total_item': len(items),
-    }
-
-    return hotel_list_dic
-
-def render_hotel_list_template_view_new(user_id):
     user = User.objects.get(social_id = user_id)
     views = View.objects.filter(user_id = user.index)
     store = {}
@@ -328,13 +328,10 @@ def render_hotel_list_template_view_new(user_id):
         root_id = view.root_id
         if root_id not in store:
             store[root_id] = True
-            print("Root id",root_id)
             hotel = Root.objects.get(id = root_id)
             hotel_template = render_hotel_template_hotel_list(hotel)
             if hotel_template != {}:
                 items.append(hotel_template)
-    
-    print(store)
     
     hotel_list_dic = {
         'status': True,
