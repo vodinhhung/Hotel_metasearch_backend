@@ -7,7 +7,7 @@ from time import sleep
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
 
-def render_hotel_detail_template(hotel, services, urls, quality):
+def render_hotel_detail_template(hotel, services, urls, quality, reviews):
     hotel_detail_dic = {
         'id': hotel.id,
         'name': hotel.name,
@@ -24,10 +24,7 @@ def render_hotel_detail_template(hotel, services, urls, quality):
         'linking': render_url_hotel_detail(urls),
         'services': render_service_hotel_detail(services),
         'prices': render_price_list_hotel_detail(urls),
-        'review': {
-            'score': 7,
-            'number_review': 234548,
-        },
+        'review': render_review_hotel_detail(reviews),
         'facilities': render_facilities_hotel_detail(quality),
     }
 
@@ -190,6 +187,17 @@ def render_facilities_hotel_detail(quality):
         index += 1
     
     return lists
+
+def render_review_hotel_detail(reviews):
+    items = []
+    for review in reviews:
+        items.append({
+            'title': review.title,
+            'text': review.text,
+            'score': review.score,
+        })
+    
+    return items
 
 def render_search_list_template(text):
     province_items = []
