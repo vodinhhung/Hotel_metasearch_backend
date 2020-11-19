@@ -12,7 +12,7 @@ conn = psycopg2.connect(database="hotel_metasearch",
 
 cur = conn.cursor()
 
-cur.execute("COPY hotel_rank FROM "+"'"+BASE_DIR+"/data/ranking.csv"+"'"+" DELIMITER ',' CSV HEADER;")
+cur.execute("COPY hotel_rank FROM "+"'"+"/tmp/data/ranking.csv"+"'"+" DELIMITER ',' CSV HEADER;")
 conn.commit()
 
 print("Operation done successfully")
