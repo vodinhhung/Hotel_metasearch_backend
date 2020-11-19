@@ -16,9 +16,7 @@ def render_hotel_detail_template(hotel, services, urls, quality, reviews):
         'assets': [hotel.logo],
         'address': hotel.address,
         'description': hotel.description,
-        'rating': {
-            'value': hotel.star,
-        },
+        'star': hotel.star,
         'position': {
             'lat': hotel.lat,
             'long': hotel.long,
