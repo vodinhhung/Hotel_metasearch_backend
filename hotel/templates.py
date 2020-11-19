@@ -3,7 +3,7 @@ import unidecode
 import threading
 from time import sleep
 
-from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
+from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province, Rank
 from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain
 
 today = date.today() 
@@ -338,3 +338,17 @@ def render_hotel_list_template_view(user_id):
     }
 
     return hotel_list_dic
+
+def render_search_recommend():
+    root = Root.objects.all().order_by('-rank__rank_score')[0:10]
+    hotel = []
+    for i in range(0,len(root)):
+        t = {"id": root[i].id, "name": root[i].name}
+        hotel.append(t)
+    search_list_dict = {"province_items":  [{ "id": 11, "name": "Hà Nội" },
+                                        { "id": 33, "name": "Hồ Chí Minh" },
+                                        { "id": 1, "name": "Thừa Thiên - Huế" },
+                                        { "id": 50, "name": "Đà Nẵng" },
+                                        { "id": 16, "name": "Thanh Hóa" }],
+                    "hotel_items": hotel}
+    return search_list_dict
