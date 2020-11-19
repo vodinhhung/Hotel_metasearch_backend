@@ -137,6 +137,7 @@ class View(models.Model):
     index = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     root = models.ForeignKey(Root, on_delete=models.CASCADE)
+    updated = models.FloatField(max_length=50, null=True)
 
 class Rank(models.Model):
     index = models.IntegerField(primary_key=True)

@@ -1,9 +1,11 @@
 from datetime import date
 import unidecode
-from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
-from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain
 import threading
 from time import sleep
+
+from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
+from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain
+
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
 
@@ -287,27 +289,53 @@ def render_hotel_list_template_like(user_id):
 
     return hotel_list_dic
 
+# def render_hotel_list_template_view(user_id):
+#     user = User.objects.get(social_id = user_id)
+#     views = View.objects.filter(user_id = user.index)
+#     items = []
+#     hotel_list = []
+
+#     for view in views:
+#         root_id = view.root_id
+#         hotel = Root.objects.get(id = root_id)
+#         hotel_template = render_hotel_template_hotel_list(hotel)
+#         if hotel_template != {}:
+#             items.append(hotel_template)
+    
+#     if len(items) > 10:
+#         hotel_list = items[::-1][:10]
+#     else:
+#         hotel_list = items[::-1]
+    
+#     hotel_list_dic = {
+#         'status': True,
+#         'items': hotel_list,
+#         'total_item': len(items),
+#     }
+
+#     return hotel_list_dic
+
 def render_hotel_list_template_view(user_id):
     user = User.objects.get(social_id = user_id)
     views = View.objects.filter(user_id = user.index)
+    store = {}
     items = []
-    hotel_list = []
 
-    for view in views:
+    for view in views[::-1]:
+        if len(items) > 10:
+            break
+        
         root_id = view.root_id
-        hotel = Root.objects.get(id = root_id)
-        hotel_template = render_hotel_template_hotel_list(hotel)
-        if hotel_template != {}:
-            items.append(hotel_template)
-    
-    if len(items) > 10:
-        hotel_list = items[::-1][:10]
-    else:
-        hotel_list = items[::-1]
+        if root_id not in store:
+            store[root_id] = True
+            hotel = Root.objects.get(id = root_id)
+            hotel_template = render_hotel_template_hotel_list(hotel)
+            if hotel_template != {}:
+                items.append(hotel_template)
     
     hotel_list_dic = {
         'status': True,
-        'items': hotel_list,
+        'items': items,
         'total_item': len(items),
     }
 
