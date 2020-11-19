@@ -1,22 +1,22 @@
 from datetime import date
 import unidecode
-from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
-from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain
 import threading
 from time import sleep
+
+from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
+from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain
+
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
 
-def render_hotel_detail_template(hotel, services, urls, quality):
+def render_hotel_detail_template(hotel, services, urls, quality, reviews):
     hotel_detail_dic = {
         'id': hotel.id,
         'name': hotel.name,
         'assets': [hotel.logo],
         'address': hotel.address,
         'description': hotel.description,
-        'rating': {
-            'value': hotel.star,
-        },
+        'star': hotel.star,
         'position': {
             'lat': hotel.lat,
             'long': hotel.long,
@@ -24,10 +24,7 @@ def render_hotel_detail_template(hotel, services, urls, quality):
         'linking': render_url_hotel_detail(urls),
         'services': render_service_hotel_detail(services),
         'prices': render_price_list_hotel_detail(urls),
-        'review': {
-            'score': 7,
-            'number_review': 234548,
-        },
+        'review': render_review_hotel_detail(reviews),
         'facilities': render_facilities_hotel_detail(quality),
     }
 
@@ -191,6 +188,17 @@ def render_facilities_hotel_detail(quality):
     
     return lists
 
+def render_review_hotel_detail(reviews):
+    items = []
+    for review in reviews:
+        items.append({
+            'title': review.title,
+            'text': review.text,
+            'score': review.score,
+        })
+    
+    return items
+
 def render_search_list_template(text):
     province_items = []
     hotel_items = []
@@ -279,27 +287,53 @@ def render_hotel_list_template_like(user_id):
 
     return hotel_list_dic
 
+# def render_hotel_list_template_view(user_id):
+#     user = User.objects.get(social_id = user_id)
+#     views = View.objects.filter(user_id = user.index)
+#     items = []
+#     hotel_list = []
+
+#     for view in views:
+#         root_id = view.root_id
+#         hotel = Root.objects.get(id = root_id)
+#         hotel_template = render_hotel_template_hotel_list(hotel)
+#         if hotel_template != {}:
+#             items.append(hotel_template)
+    
+#     if len(items) > 10:
+#         hotel_list = items[::-1][:10]
+#     else:
+#         hotel_list = items[::-1]
+    
+#     hotel_list_dic = {
+#         'status': True,
+#         'items': hotel_list,
+#         'total_item': len(items),
+#     }
+
+#     return hotel_list_dic
+
 def render_hotel_list_template_view(user_id):
     user = User.objects.get(social_id = user_id)
     views = View.objects.filter(user_id = user.index)
+    store = {}
     items = []
-    hotel_list = []
 
-    for view in views:
+    for view in views[::-1]:
+        if len(items) > 10:
+            break
+        
         root_id = view.root_id
-        hotel = Root.objects.get(id = root_id)
-        hotel_template = render_hotel_template_hotel_list(hotel)
-        if hotel_template != {}:
-            items.append(hotel_template)
-    
-    if len(items) > 10:
-        hotel_list = items[::-1][:10]
-    else:
-        hotel_list = items[::-1]
+        if root_id not in store:
+            store[root_id] = True
+            hotel = Root.objects.get(id = root_id)
+            hotel_template = render_hotel_template_hotel_list(hotel)
+            if hotel_template != {}:
+                items.append(hotel_template)
     
     hotel_list_dic = {
         'status': True,
-        'items': hotel_list,
+        'items': items,
         'total_item': len(items),
     }
 
