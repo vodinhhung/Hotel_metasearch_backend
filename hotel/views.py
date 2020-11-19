@@ -7,7 +7,7 @@ from django.db.models import Q
 
 from hotel.models import Province, Root, Url, Quality, Info, Review, Rank
 from hotel.serializers import RootSerializer
-from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view, render_search_list_template
+from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view, render_search_list_template, render_search_recommend
 from hotel.tools.tools import hotel_list_filter_facility
 from hotel.tools.login_tools import call_facebook_api, save_user_database, check_token_user, call_google_api
 from hotel.tools.user_tools import save_like, save_view
@@ -94,14 +94,10 @@ def hotel_search(request):
         province_items = []
         hotel_items = []
         if text is not None:
-            search_list_dict = render_search_list_template(text)
+            if str(text) == '':
+                search_list_dict = render_search_recommend()
         else:
-            search_list_dict = {"province_items":  [{ "id": 11, "name": "Hà Nội" },
-                                                    { "id": 33, "name": "Hồ Chí Minh" },
-                                                    { "id": 1, "name": "Thừa Thiên - Huế" },
-                                                    { "id": 50, "name": "Đà Nẵng" },
-                                                    { "id": 16, "name": "Thanh Hóa" }],
-                                "hotel_items": []}
+            search_list_dict = render_search_recommend()
         search_list_json = json.dumps(search_list_dict)
         return HttpResponse(search_list_json, content_type="application/json")
 
