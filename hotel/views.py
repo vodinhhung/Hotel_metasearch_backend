@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models import Q
 
-from hotel.models import Province, Root, Url, Quality, Info, Review
+from hotel.models import Province, Root, Url, Quality, Info, Review, Rank
 from hotel.serializers import RootSerializer
 from hotel.templates import render_hotel_detail_template, render_hotel_list_template, render_hotel_list_template_like, render_hotel_list_template_view, render_search_list_template
 from hotel.tools.tools import hotel_list_filter_facility
@@ -34,6 +34,9 @@ def hotel_list(request):
             date_from = date
         if date_to is not None:
             date_to = date1
+
+        # Add ranking
+        root = root.order_by('-rank__rank_score')
 
         # Add type params of hotel: homestay, hostel for filter api
         type = request.GET.get('type', None)
