@@ -1,11 +1,12 @@
 import requests
 import base64
 from datetime import date
-from hotel.models import Domain, Url, Quality, Root, Info
+from hotel.models import Domain, Url, Quality, Root, Info, Rank
 import threading
 from time import sleep
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
+price_weight = 1.1594202897206469e-10
 
 def update_min_price(urls):
     #chạy sau khi trả response 60s
@@ -31,6 +32,26 @@ def update_min_price_domain(root):
         root.save()
         print("Updated min price domain with root_id:  ",root.id)
 
+def update_ranking(root):
+    #tích hợp update min price domain và ranking
+    sleep(120)
+    urls = Url.objects.filter(root_id = root.id)
+    [min_price, min_domain_id] = get_min_price_hotel_database(urls)
+    if (min_price != -1) and (int(min_price) != int(root.min_price_domain)):
+        list_price = list(Root.objects.values_list('min_price_domain', flat=True))
+        sum_price_old = sum(list(filter(lambda a: a != -1, list_price)))
+        # update price
+        t = root.min_price_domain
+        root.min_price_domain = int(min_price)
+        root.save()
+        print("Updated min price domain with root_id:  ",root.id)
+        # update ranking
+        sum_price_new = sum_price_old - t + min_price
+        rank = Rank.objects.get(root_id = root.id)
+        score = rank.rank_score - price_weight*(sum_price_old/t) + price_weight*(sum_price_new/min_price)
+        rank.rank_score = float(score)
+        rank.save()
+       
 def get_price(payload):
     USERNAME = 'CFF'
     PASSWORD = 'Q3bohJmeuQcItP9vmhVE'
