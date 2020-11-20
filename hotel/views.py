@@ -96,6 +96,8 @@ def hotel_search(request):
         if text is not None:
             if str(text) == '':
                 search_list_dict = render_search_recommend()
+            else:
+                search_list_dict = render_search_list_template(text)
         else:
             search_list_dict = render_search_recommend()
         search_list_json = json.dumps(search_list_dict)
