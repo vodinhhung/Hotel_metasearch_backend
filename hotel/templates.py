@@ -4,7 +4,7 @@ import threading
 from time import sleep
 
 from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province, Rank
-from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain
+from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain, update_ranking
 
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
@@ -251,7 +251,7 @@ def render_hotel_template_hotel_list(root):
     quality = Quality.objects.filter(root_id = root.id)
     #[min_price, domain_id] = get_min_price_hotel(urls)
     [min_price, domain_id] = get_min_price_hotel_database(urls)
-    k = threading.Thread(target=update_min_price_domain, args=[root])
+    k = threading.Thread(target=update_ranking, args=[root])
     k.setDaemon(False)
     k.start()
     item = {}
