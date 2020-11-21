@@ -1,5 +1,5 @@
 from django.db.models.expressions import F
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -105,6 +105,12 @@ def hotel_search(request):
 
 def hotel_detail(request, id):
     if request.method == "GET":
+        # get params date
+        path = HttpRequest.get_full_path(request)
+        if path.count('?') > 0:
+            params = path.split('?')[1].split('&')
+            date_from = params[0].split('=')[1]
+            date_to = params[1].split('=')[1]
         # Get hotel information from databse
         hotel = Root.objects.get(id=id)
         info = Info.objects.get(root_id=id)
