@@ -23,7 +23,8 @@ def render_hotel_detail_template(hotel, services, urls, quality, reviews):
         },
         'linking': render_url_hotel_detail(urls),
         'services': render_service_hotel_detail(services),
-        'prices': render_price_list_hotel_detail(urls),
+        'prices': render_price_list_database_hotel_detail(urls),
+        #'prices': render_price_list_hotel_detail(urls),
         'review': render_review_hotel_detail(reviews),
         'facilities': render_facilities_hotel_detail(quality),
     }
@@ -143,6 +144,19 @@ def render_price_list_hotel_detail(urls):
                 'platform': domain.name,
                 'value': current_price
             })
+    
+    return price_list
+
+def render_price_list_database_hotel_detail(urls):
+    price_list = []
+
+    for url in urls:
+        domain_id = str(url.domain_id)
+        domain = Domain.objects.get(id=url.domain_id)
+        price_list.append({
+            'platform': domain.name,
+            'value': url.min_price
+        })
     
     return price_list
 
