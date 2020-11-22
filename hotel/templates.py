@@ -11,22 +11,22 @@ date = str(today.year)+str(today.month)+str(today.day)
 
 def render_hotel_detail_template(hotel, services, urls, quality, reviews, checkday):
     hotel_detail_dic = {
-        'id': hotel.id,
-        'name': hotel.name,
-        'assets': [hotel.logo],
-        'address': hotel.address,
+        # 'id': hotel.id,
+        # 'name': hotel.name,
+        # 'assets': [hotel.logo],
+        # 'address': hotel.address,
         # 'description': hotel.description,
-        'star': hotel.star,
-        'position': {
-            'lat': hotel.lat,
-            'long': hotel.long,
-        },
-        'linking': render_url_hotel_detail(urls, checkday),
-        'services': render_service_hotel_detail(services),
-        'prices': render_price_list_database_hotel_detail(urls),
-        #'prices': render_price_list_hotel_detail(urls),
-        'review': render_review_hotel_detail(reviews),
-        'facilities': render_facilities_hotel_detail(quality),
+        # 'star': hotel.star,
+        # 'position': {
+        #     'lat': hotel.lat,
+        #     'long': hotel.long,
+        # },
+        # 'linking': render_url_hotel_detail(urls, checkday),
+        # 'services': render_service_hotel_detail(services),
+        # 'prices': render_price_list_database_hotel_detail(urls),
+        # 'prices': render_price_list_hotel_detail(urls),
+        # 'review': render_review_hotel_detail(reviews),
+        # 'facilities': render_facilities_hotel_detail(quality),
     }
 
     return hotel_detail_dic
