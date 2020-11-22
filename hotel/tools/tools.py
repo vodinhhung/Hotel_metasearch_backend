@@ -10,7 +10,6 @@ price_weight = 1.1594202897206469e-10
 
 def update_min_price(urls):
     #chạy sau khi trả response 60s
-    sleep(60)
     for url in urls:
         domain_id = str(url.domain_id)
         domain_hotel_id = str(url.domain_hotel_id)
@@ -24,7 +23,6 @@ def update_min_price(urls):
 
 def update_min_price_domain(root):
     #chạy sau khi trả response 120s, phải update min_price trước
-    sleep(120)
     urls = Url.objects.filter(root_id = root.id)
     [min_price, min_domain_id] = get_min_price_hotel_database(urls)
     if (min_price != -1) and (int(min_price) != int(root.min_price_domain)):
@@ -34,7 +32,7 @@ def update_min_price_domain(root):
 
 def update_ranking(root):
     #tích hợp update min price domain và ranking
-    sleep(120)
+    sleep(60)
     urls = Url.objects.filter(root_id = root.id)
     [min_price, min_domain_id] = get_min_price_hotel_database(urls)
     if (min_price != -1) and (int(min_price) != int(root.min_price_domain)):
