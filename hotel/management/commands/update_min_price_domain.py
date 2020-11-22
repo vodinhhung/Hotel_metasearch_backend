@@ -20,7 +20,7 @@ cur.execute('''CREATE TABLE price_domain_update
       PRIMARY KEY (index));
       ''')
 
-province = "COPY price_domain_update FROM "+"'"+BASE_DIR+"/data/min_price_domain_update.csv"+"'"+" DELIMITER ',' CSV HEADER;"
+province = "COPY price_domain_update FROM "+"'"+"/tmp/data/min_price_domain_update.csv"+"'"+" DELIMITER ',' CSV HEADER;"
 
 cur.execute(province)
 
