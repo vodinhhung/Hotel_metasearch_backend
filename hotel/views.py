@@ -105,12 +105,13 @@ def hotel_search(request):
 
 def hotel_detail(request, id):
     if request.method == "GET":
-        # get params date
-        path = HttpRequest.get_full_path(request)
-        if path.count('?') > 0:
-            params = path.split('?')[1].split('&')
-            date_from = params[0].split('=')[1]
-            date_to = params[1].split('=')[1]
+        check_in = request.GET.get('checkin', None)
+        check_out = request.GET.get('checkout', None)
+        if check_in != None and check_out != None:
+            check_day = [check_in, check_out]
+        else:
+            check_day = ["", ""]
+
         # Get hotel information from databse
         hotel = Root.objects.get(id=id)
         info = Info.objects.get(root_id=id)
@@ -119,7 +120,7 @@ def hotel_detail(request, id):
         reviews = Review.objects.filter(root_id=id)
 
         # Customise Json response
-        hotel_detail = render_hotel_detail_template(hotel, info, urls, quality, reviews)
+        hotel_detail = render_hotel_detail_template(hotel, info, urls, quality, reviews, check_day)
         hotel_detail_json = json.dumps(hotel_detail)
         return HttpResponse(hotel_detail_json, content_type="application/json")
 

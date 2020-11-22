@@ -9,19 +9,19 @@ from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hote
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
 
-def render_hotel_detail_template(hotel, services, urls, quality, reviews):
+def render_hotel_detail_template(hotel, services, urls, quality, reviews, checkday):
     hotel_detail_dic = {
         'id': hotel.id,
         'name': hotel.name,
         'assets': [hotel.logo],
         'address': hotel.address,
-        'description': hotel.description,
+        # 'description': hotel.description,
         'star': hotel.star,
         'position': {
             'lat': hotel.lat,
             'long': hotel.long,
         },
-        'linking': render_url_hotel_detail(urls),
+        'linking': render_url_hotel_detail(urls, checkday),
         'services': render_service_hotel_detail(services),
         'prices': render_price_list_database_hotel_detail(urls),
         #'prices': render_price_list_hotel_detail(urls),
@@ -31,7 +31,7 @@ def render_hotel_detail_template(hotel, services, urls, quality, reviews):
 
     return hotel_detail_dic
 
-def render_url_hotel_detail(urls):
+def render_url_hotel_detail(urls, checkday):
     lists = []
 
     for url in urls:
@@ -40,7 +40,8 @@ def render_url_hotel_detail(urls):
 
         if url.url == "-1":
             hotel_id = url.domain_hotel_id
-            hotel_url = "https://expedia.com.vn/h" + hotel_id + ".Thong-tin-khach-san"
+            params = '?chkin={' + checkday[0] + "}&chkout={"+checkday[1]+"}"
+            hotel_url = "https://expedia.com.vn/h" + hotel_id + ".Thong-tin-khach-san" + params
             lists.append({
                 'type': "Expedia",
                 'url': hotel_url,
@@ -48,16 +49,19 @@ def render_url_hotel_detail(urls):
             continue
         
         if domain_name == "Agoda":
-            hotel_url = "https://agoda.com" + url.url
+            params = "?Ios=1&checkIn={" + checkday[0] + "}&checkOut={" + checkday[1] +"}"
+            hotel_url = "https://agoda.com" + url.url + params
             lists.append({
                 'type': "Agoda",
                 'url': hotel_url,
             })
             continue
         
+        params = "?checkin={" + checkday[0] + "}&checkout={" + checkday[1] + "}"
+        hotel_url = url.url + params
         lists.append({
             'type': domain_name,
-            'url': url.url,
+            'url': hotel_url,
         })
     
     return lists
