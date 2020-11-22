@@ -157,10 +157,11 @@ def render_price_list_database_hotel_detail(urls):
     for url in urls:
         domain_id = str(url.domain_id)
         domain = Domain.objects.get(id=url.domain_id)
-        price_list.append({
-            'platform': domain.name,
-            'value': url.min_price
-        })
+        if url.min_price != -1:
+            price_list.append({
+                'platform': domain.name,
+                'value': url.min_price
+            })
     
     return price_list
 
