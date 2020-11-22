@@ -135,9 +135,9 @@ def get_min_price_hotel(urls):
     return [min_price, min_domain_id]
 
 def get_min_price_hotel_database(urls):
-    t = threading.Thread(target=update_min_price, args=[urls])
-    t.setDaemon(False)
-    t.start()
+    # t = threading.Thread(target=update_min_price, args=[urls])
+    # t.setDaemon(False)
+    # t.start()
     min_price = float('inf')
     min_domain_id = -1
     for url in urls:

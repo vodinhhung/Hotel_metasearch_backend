@@ -256,9 +256,9 @@ def render_hotel_template_hotel_list(root):
     quality = Quality.objects.filter(root_id = root.id)
     #[min_price, domain_id] = get_min_price_hotel(urls)
     [min_price, domain_id] = get_min_price_hotel_database(urls)
-    k = threading.Thread(target=update_ranking, args=[root])
-    k.setDaemon(False)
-    k.start()
+    # k = threading.Thread(target=update_ranking, args=[root])
+    # k.setDaemon(False)
+    # k.start()
     item = {}
 
     if (domain_id != -1):
