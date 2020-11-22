@@ -122,6 +122,7 @@ class User(models.Model):
     social_id = models.CharField(max_length=2083)
     name = models.CharField(max_length=2083)
     social_domain = models.IntegerField()
+    picture = models.CharField(max_length=2083, null=True)
 
     def __str__(self) -> str:
         return self.name
@@ -136,3 +137,9 @@ class View(models.Model):
     index = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     root = models.ForeignKey(Root, on_delete=models.CASCADE)
+    updated = models.FloatField(max_length=50, null=True)
+
+class Rank(models.Model):
+    index = models.IntegerField(primary_key=True)
+    root = models.ForeignKey(Root, on_delete=models.CASCADE)
+    rank_score = models.FloatField(max_length=20, null=True)

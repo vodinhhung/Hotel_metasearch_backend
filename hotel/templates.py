@@ -1,35 +1,37 @@
 from datetime import date
 import unidecode
+import threading
+from time import sleep
 
-from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province
-from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database
+from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province, Rank
+from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain, update_ranking
 
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
 
-def render_hotel_detail_template(hotel, services, urls, quality):
+def render_hotel_detail_template(hotel, services, urls, quality, reviews, checkday):
     hotel_detail_dic = {
         'id': hotel.id,
         'name': hotel.name,
         'assets': [hotel.logo],
         'address': hotel.address,
         'description': hotel.description,
-        'rating': {
-            'value': hotel.star,
+        'star': hotel.star,
+        'position': {
+            'lat': hotel.lat,
+            'long': hotel.long,
         },
-        'linking': render_url_hotel_detail(urls),
+        'linking': render_url_hotel_detail(urls, checkday),
         'services': render_service_hotel_detail(services),
-        'prices': render_price_list_hotel_detail(urls),
-        'review': {
-            'score': 7,
-            'number_review': 234548,
-        },
+        'prices': render_price_list_database_hotel_detail(urls),
+        # 'prices': render_price_list_hotel_detail(urls),
+        'review': render_review_hotel_detail(reviews),
         'facilities': render_facilities_hotel_detail(quality),
     }
 
     return hotel_detail_dic
 
-def render_url_hotel_detail(urls):
+def render_url_hotel_detail(urls, checkday):
     lists = []
 
     for url in urls:
@@ -38,7 +40,8 @@ def render_url_hotel_detail(urls):
 
         if url.url == "-1":
             hotel_id = url.domain_hotel_id
-            hotel_url = "https://expedia.com.vn/h" + hotel_id + ".Thong-tin-khach-san"
+            params = '?chkin={' + checkday[0] + "}&chkout={"+checkday[1]+"}"
+            hotel_url = "https://expedia.com.vn/h" + hotel_id + ".Thong-tin-khach-san" + params
             lists.append({
                 'type': "Expedia",
                 'url': hotel_url,
@@ -46,16 +49,19 @@ def render_url_hotel_detail(urls):
             continue
         
         if domain_name == "Agoda":
-            hotel_url = "https://agoda.com" + url.url
+            params = "?Ios=1&checkIn={" + checkday[0] + "}&checkOut={" + checkday[1] +"}"
+            hotel_url = "https://agoda.com" + url.url + params
             lists.append({
                 'type': "Agoda",
                 'url': hotel_url,
             })
             continue
         
+        params = "?checkin={" + checkday[0] + "}&checkout={" + checkday[1] + "}"
+        hotel_url = url.url + params
         lists.append({
             'type': domain_name,
-            'url': url.url,
+            'url': hotel_url,
         })
     
     return lists
@@ -145,6 +151,20 @@ def render_price_list_hotel_detail(urls):
     
     return price_list
 
+def render_price_list_database_hotel_detail(urls):
+    price_list = []
+
+    for url in urls:
+        domain_id = str(url.domain_id)
+        domain = Domain.objects.get(id=url.domain_id)
+        if url.min_price != -1:
+            price_list.append({
+                'platform': domain.name,
+                'value': url.min_price
+            })
+    
+    return price_list
+
 def render_facilities_hotel_detail(quality):
     lists = []
     quality_field_list = [
@@ -187,6 +207,17 @@ def render_facilities_hotel_detail(quality):
     
     return lists
 
+def render_review_hotel_detail(reviews):
+    items = []
+    for review in reviews:
+        items.append({
+            'title': review.title,
+            'text': review.text,
+            'score': review.score,
+        })
+    
+    return items
+
 def render_search_list_template(text):
     province_items = []
     hotel_items = []
@@ -225,6 +256,9 @@ def render_hotel_template_hotel_list(root):
     quality = Quality.objects.filter(root_id = root.id)
     #[min_price, domain_id] = get_min_price_hotel(urls)
     [min_price, domain_id] = get_min_price_hotel_database(urls)
+    k = threading.Thread(target=update_ranking, args=[root])
+    k.setDaemon(False)
+    k.start()
     item = {}
 
     if (domain_id != -1):
@@ -272,25 +306,68 @@ def render_hotel_list_template_like(user_id):
 
     return hotel_list_dic
 
+# def render_hotel_list_template_view(user_id):
+#     user = User.objects.get(social_id = user_id)
+#     views = View.objects.filter(user_id = user.index)
+#     items = []
+#     hotel_list = []
+
+#     for view in views:
+#         root_id = view.root_id
+#         hotel = Root.objects.get(id = root_id)
+#         hotel_template = render_hotel_template_hotel_list(hotel)
+#         if hotel_template != {}:
+#             items.append(hotel_template)
+    
+#     if len(items) > 10:
+#         hotel_list = items[::-1][:10]
+#     else:
+#         hotel_list = items[::-1]
+    
+#     hotel_list_dic = {
+#         'status': True,
+#         'items': hotel_list,
+#         'total_item': len(items),
+#     }
+
+#     return hotel_list_dic
+
 def render_hotel_list_template_view(user_id):
     user = User.objects.get(social_id = user_id)
     views = View.objects.filter(user_id = user.index)
+    store = {}
     items = []
 
-    for view in views:
+    for view in views[::-1]:
+        if len(items) > 10:
+            break
+        
         root_id = view.root_id
-        hotel = Root.objects.get(id = root_id)
-        print(hotel)
-        hotel_template = render_hotel_template_hotel_list(hotel)
-        if hotel_template != {}:
-            items.append(hotel_template)
-
-    print(items)
+        if root_id not in store:
+            store[root_id] = True
+            hotel = Root.objects.get(id = root_id)
+            hotel_template = render_hotel_template_hotel_list(hotel)
+            if hotel_template != {}:
+                items.append(hotel_template)
     
     hotel_list_dic = {
         'status': True,
-        'items': items[::-1],
+        'items': items,
         'total_item': len(items),
     }
 
     return hotel_list_dic
+
+def render_search_recommend():
+    root = Root.objects.all().order_by('-rank__rank_score')[0:10]
+    hotel = []
+    for i in range(0,len(root)):
+        t = {"id": root[i].id, "name": root[i].name}
+        hotel.append(t)
+    search_list_dict = {"province_items":  [{ "id": 11, "name": "Hà Nội" },
+                                        { "id": 33, "name": "Hồ Chí Minh" },
+                                        { "id": 1, "name": "Thừa Thiên - Huế" },
+                                        { "id": 50, "name": "Đà Nẵng" },
+                                        { "id": 16, "name": "Thanh Hóa" }],
+                    "hotel_items": hotel}
+    return search_list_dict
