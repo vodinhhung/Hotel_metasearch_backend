@@ -278,6 +278,8 @@ def render_hotel_template_hotel_list(root):
             'star': root.star, 
             'logo': root.logo,
             'overall_score': quality[0].overall_score, 
+            'num_review': quality[0].num_review,
+            'review_score': quality[0].review_score,
             'price': {
                 'domain': domain, 
                 'value': min_price
