@@ -3,8 +3,6 @@ import joblib
 from pyvi import ViTokenizer
 from nltk.stem import PorterStemmer
 import pickle
-from nltk.corpus import stopwords
-stop_words = stopwords.words('english')
 with open('vietnamese_stopwords.txt', encoding="utf8") as f:
     stopwords1 = []
     for line in f:
