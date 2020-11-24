@@ -5,7 +5,7 @@ from time import sleep
 
 from hotel.models import Domain, Like, Url, Quality, Root, User, View, Province, Rank
 from hotel.tools.tools import get_price, get_min_price_hotel, get_min_price_hotel_database, update_min_price_domain, update_ranking
-
+from hotel.tools.review_tools import train_review_vi, train_review_en
 today = date.today() 
 date = str(today.year)+str(today.month)+str(today.day)
 
@@ -25,7 +25,7 @@ def render_hotel_detail_template(hotel, services, urls, quality, reviews, checkd
         'services': render_service_hotel_detail(services),
         'prices': render_price_list_database_hotel_detail(urls),
         # 'prices': render_price_list_hotel_detail(urls),
-        'review': render_review_hotel_detail(reviews),
+        'review': render_review_hotel_detail_test(reviews),
         'facilities': render_facilities_hotel_detail(quality),
     }
 
@@ -216,6 +216,45 @@ def render_review_hotel_detail(reviews):
             'score': review.score,
         })
     
+    return items
+
+def render_review_hotel_detail_test(reviews):
+    items = []
+    text_vi = []
+    title_vi = []
+    score_vi = []
+    text_en = []
+    title_en = []
+    score_en = []
+    for review in reviews:
+        if review.langcode in ['vi','VN', 'VIETNAMESE', 'vi_VN']:
+            text_vi.append(review.text)
+            title_vi.append(review.title)
+            score_vi.append(review.score)
+        else:
+            text_en.append(str(review.text))
+            title_en.append(review.title)
+            score_en.append(review.score)
+
+    if text_vi != []:
+        result_vi = train_review_vi(text_vi)
+        for i in range(0,len(result_vi)):
+            if int(result_vi[i]) == 1:
+                items.append({
+                    'title': title_vi[i],
+                    'text': text_vi[i],
+                    'score': score_vi[i],
+                }) 
+
+    if text_en != []:
+        result_en = train_review_en(text_en)
+        for i in range(0,len(result_en)):
+            if int(result_en[i]) == 1:
+                items.append({
+                    'title': title_en[i],
+                    'text': text_en[i],
+                    'score': score_en[i],
+                })
     return items
 
 def render_search_list_template(text):

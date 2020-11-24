@@ -2,7 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+from hotel.tools.review_tools import preprocessor, tokenizer_porter
 
 def main():
     """Run administrative tasks."""
