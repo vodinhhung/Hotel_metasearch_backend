@@ -31,9 +31,18 @@ def update_min_price_domain(root):
         print("Updated min price domain with root_id:  ",root.id)
 
 def update_ranking(root):
-    #tích hợp update min price domain và ranking
-    sleep(60)
     urls = Url.objects.filter(root_id = root.id)
+    for url in urls:
+        domain_id = str(url.domain_id)
+        domain_hotel_id = str(url.domain_hotel_id)
+        params = domain_id+ "_" +domain_hotel_id+ "_" + date
+        payload =  '{"hotel_ids": '+'"'+params+'"'+'}'
+        current_price = get_price(payload)
+        if (current_price != float('inf')) and ((int(current_price) - int(url.min_price)) != 0):
+            url.min_price = int(current_price)
+            url.save()
+            print("Updated min price with domain_hotel_id: ",url.domain_hotel_id)
+
     [min_price, min_domain_id] = get_min_price_hotel_database(urls)
     if (min_price != -1) and (int(min_price) != int(root.min_price_domain)):
         list_price = list(Root.objects.values_list('min_price_domain', flat=True))
@@ -135,9 +144,9 @@ def get_min_price_hotel(urls):
     return [min_price, min_domain_id]
 
 def get_min_price_hotel_database(urls):
-    t = threading.Thread(target=update_min_price, args=[urls])
-    t.setDaemon(False)
-    t.start()
+    # t = threading.Thread(target=update_min_price, args=[urls])
+    # t.setDaemon(False)
+    # t.start()
     min_price = float('inf')
     min_domain_id = -1
     for url in urls:
